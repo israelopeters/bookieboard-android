@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Bookieboard</string>
+    <string name="bookieboard">BookieBoard</string>
+    <string name="welcome_subtitle">How bookish are you?</string>
 </resources>

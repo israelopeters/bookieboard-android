@@ -10,5 +10,7 @@ A user can perform the following actions:
 - Take quizzes
 - View bookieboard (leaderboard)
 
-## User Interface + Features
-Loading...
+## User Interface
+
+### Welcome Screen
+<a href="https://www.freepik.com/free-vector/books-seamless-pattern-doodle-outline-textbooks_21957290.htm">Image by upklyak on Freepik</a>
