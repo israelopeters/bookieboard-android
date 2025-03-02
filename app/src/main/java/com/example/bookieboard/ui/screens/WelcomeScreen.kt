@@ -5,11 +5,13 @@ import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.paddingFromBaseline
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -57,11 +59,36 @@ fun AppDetails(
             alignment = Alignment.Center,
             modifier = Modifier
                 .size(100.dp)
-                .padding(8.dp).
-                clip(shape = MaterialTheme.shapes.medium)
+                .padding(8.dp)
+                .clip(shape = MaterialTheme.shapes.medium)
         )
     }
 
+}
+
+@Composable
+fun AppLogin(
+    onLoginClicked: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.SpaceBetween,
+        modifier = modifier
+    ) {
+        OutlinedTextField(
+            value = "",
+            onValueChange = { },
+            label = { Text("Email") },
+            modifier = Modifier.padding(8.dp)
+        )
+        OutlinedTextField(
+            value = "",
+            onValueChange = { },
+            label = { Text("Password") },
+            modifier = Modifier.padding(8.dp)
+        )
+    }
 }
 
 @Preview(
@@ -83,4 +110,21 @@ fun AppDetailsPreview() {
             headerSubtitle = R.string.welcome_subtitle
         )
     }
+}
+
+@Preview(
+    showBackground = true,
+    uiMode = UI_MODE_NIGHT_NO,
+    name = "DefaultPreviewLight"
+)
+@Preview(
+    showBackground = true,
+    uiMode = UI_MODE_NIGHT_YES,
+    name = "DefaultPreviewDark"
+)
+@Composable
+fun AppLoginPreview() {
+    AppLogin(
+        onLoginClicked = { }
+    )
 }
