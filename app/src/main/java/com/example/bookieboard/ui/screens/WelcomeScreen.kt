@@ -7,9 +7,11 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.paddingFromBaseline
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -79,15 +81,21 @@ fun AppLogin(
         OutlinedTextField(
             value = "",
             onValueChange = { },
-            label = { Text("Email") },
-            modifier = Modifier.padding(8.dp)
+            label = { Text(stringResource(R.string.email)) },
+            modifier = Modifier.fillMaxWidth().padding(8.dp)
         )
         OutlinedTextField(
             value = "",
             onValueChange = { },
-            label = { Text("Password") },
-            modifier = Modifier.padding(8.dp)
+            label = { Text(stringResource(R.string.password)) },
+            modifier = Modifier.fillMaxWidth().padding(8.dp)
         )
+        Button(
+            onClick = onLoginClicked,
+            modifier = Modifier.fillMaxWidth().padding(8.dp)
+        ) {
+            Text(stringResource(R.string.sign_in))
+        }
     }
 }
 
