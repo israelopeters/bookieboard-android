@@ -5,8 +5,10 @@ import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.paddingFromBaseline
@@ -27,6 +29,33 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.bookieboard.R
 import com.example.bookieboard.ui.theme.BookieboardTheme
+
+@Composable
+fun WelcomeScreen(
+    onLoginClicked: () -> Unit,
+    onSignUpClicked: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+        modifier = modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+    ) {
+        AppDetails()
+
+        AppLogin(
+            onLoginClicked = onLoginClicked
+        )
+
+        AppSignUp(
+            onSignUpClicked = onSignUpClicked
+        )
+    }
+
+}
+
 
 @Composable
 fun AppDetails(
@@ -77,23 +106,29 @@ fun AppLogin(
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween,
-        modifier = modifier
+        modifier = modifier.padding(24.dp)
     ) {
         OutlinedTextField(
             value = "",
             onValueChange = { },
             label = { Text(stringResource(R.string.email)) },
-            modifier = Modifier.fillMaxWidth().padding(8.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
         )
         OutlinedTextField(
             value = "",
             onValueChange = { },
             label = { Text(stringResource(R.string.password)) },
-            modifier = Modifier.fillMaxWidth().padding(8.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
         )
         Button(
             onClick = onLoginClicked,
-            modifier = Modifier.fillMaxWidth().padding(8.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
         ) {
             Text(stringResource(R.string.sign_in))
         }
@@ -108,7 +143,7 @@ fun AppSignUp(
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier.padding(8.dp)
+        modifier = modifier.padding(top = 8.dp)
     ) {
         Text(
             text = stringResource(R.string.not_yet_registered),
@@ -117,10 +152,32 @@ fun AppSignUp(
 
         TextButton (
             onClick = onSignUpClicked,
-            modifier = Modifier.padding(8.dp)
         ) {
             Text(stringResource(R.string.sign_up))
         }
+    }
+}
+
+// Previews
+@Preview(
+    showBackground = true,
+    showSystemUi = true,
+    uiMode = UI_MODE_NIGHT_NO,
+    name = "DefaultPreviewLight"
+)
+@Preview(
+    showBackground = true,
+    showSystemUi = true,
+    uiMode = UI_MODE_NIGHT_YES,
+    name = "DefaultPreviewDark"
+)
+@Composable
+fun WelcomeScreenPreview() {
+    BookieboardTheme {
+        WelcomeScreen(
+            onLoginClicked = { },
+            onSignUpClicked = { }
+        )
     }
 }
 
