@@ -45,13 +45,9 @@ fun WelcomeScreen(
     ) {
         AppDetails()
 
-        AppLogin(
-            onLoginClicked = onLoginClicked
-        )
+        AppSignIn(onLoginClicked = onLoginClicked)
 
-        AppSignUp(
-            onSignUpClicked = onSignUpClicked
-        )
+        AppSignUp(onSignUpClicked = onSignUpClicked)
     }
 
 }
@@ -99,7 +95,7 @@ fun AppDetails(
 }
 
 @Composable
-fun AppLogin(
+fun AppSignIn(
     onLoginClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -210,7 +206,7 @@ fun AppDetailsPreview() {
 )
 @Composable
 fun AppLoginPreview() {
-    AppLogin(
+    AppSignIn(
         onLoginClicked = { }
     )
 }
