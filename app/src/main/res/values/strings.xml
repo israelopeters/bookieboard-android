@@ -5,4 +5,6 @@
     <string name="sign_in">Sign in</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
+    <string name="not_yet_registered">Not registered yet?</string>
+    <string name="sign_up">Sign up</string>
 </resources>

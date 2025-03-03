@@ -15,6 +15,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -99,6 +100,30 @@ fun AppLogin(
     }
 }
 
+@Composable
+fun AppSignUp(
+    onSignUpClicked: () -> Unit,
+    modifier: Modifier =  Modifier
+) {
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier.padding(8.dp)
+    ) {
+        Text(
+            text = stringResource(R.string.not_yet_registered),
+            color = MaterialTheme.colorScheme.onBackground
+        )
+
+        TextButton (
+            onClick = onSignUpClicked,
+            modifier = Modifier.padding(8.dp)
+        ) {
+            Text(stringResource(R.string.sign_up))
+        }
+    }
+}
+
 @Preview(
     showBackground = true,
     uiMode = UI_MODE_NIGHT_NO,
@@ -134,5 +159,22 @@ fun AppDetailsPreview() {
 fun AppLoginPreview() {
     AppLogin(
         onLoginClicked = { }
+    )
+}
+
+@Preview(
+    showBackground = true,
+    uiMode = UI_MODE_NIGHT_NO,
+    name = "DefaultPreviewLight"
+)
+@Preview(
+    showBackground = true,
+    uiMode = UI_MODE_NIGHT_YES,
+    name = "DefaultPreviewDark"
+)
+@Composable
+fun AppSignUpPreview() {
+    AppSignUp(
+        onSignUpClicked = { }
     )
 }
