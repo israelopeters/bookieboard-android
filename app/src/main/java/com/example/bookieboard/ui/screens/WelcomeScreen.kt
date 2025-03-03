@@ -30,10 +30,10 @@ import com.example.bookieboard.ui.theme.BookieboardTheme
 
 @Composable
 fun AppDetails(
-    @DrawableRes image: Int,
-    @StringRes screenHeader: Int,
-    @StringRes headerSubtitle: Int,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    @DrawableRes image: Int = R.drawable.welcome_screen_image,
+    @StringRes screenHeader: Int = R.string.bookieboard,
+    @StringRes headerSubtitle: Int = R.string.welcome_subtitle,
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -137,11 +137,7 @@ fun AppSignUp(
 @Composable
 fun AppDetailsPreview() {
     BookieboardTheme {
-        AppDetails(
-            image = R.drawable.welcome_screen_image,
-            screenHeader = R.string.bookieboard,
-            headerSubtitle = R.string.welcome_subtitle
-        )
+        AppDetails()
     }
 }
 
