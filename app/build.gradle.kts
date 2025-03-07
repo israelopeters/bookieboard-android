@@ -41,6 +41,8 @@ android {
     }
 }
 
+val ktor_version: String by project
+
 dependencies {
 
     implementation(libs.androidx.core.ktx)
@@ -60,6 +62,13 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
+    implementation("io.ktor:ktor-client-core:$ktor_version")
+    implementation("io.ktor:ktor-client-cio:$ktor_version")
+    implementation("io.ktor:ktor-client-content-negotiation:$ktor_version")
+    implementation("io.ktor:ktor-serialization-jackson:$ktor_version")
+    implementation("io.ktor:ktor-client-auth:$ktor_version")
+    implementation("io.ktor:ktor-client-logging:$ktor_version")
+    implementation(libs.slf4j.android)
 }
 
 // Allow references to generated code
