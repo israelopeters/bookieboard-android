@@ -28,10 +28,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.bookieboard.R
+import com.example.bookieboard.service.UserViewModel
 import com.example.bookieboard.ui.theme.BookieboardTheme
 
 @Composable
 fun WelcomeScreen(
+    userViewModel: UserViewModel,
     onLoginClicked: () -> Unit,
     onSignUpClicked: () -> Unit,
     modifier: Modifier = Modifier
@@ -45,7 +47,10 @@ fun WelcomeScreen(
     ) {
         AppDetails()
 
-        AppSignIn(onLoginClicked = onLoginClicked)
+        AppSignIn(
+            userViewModel,
+            onLoginClicked = onLoginClicked
+        )
 
         AppSignUp(onSignUpClicked = onSignUpClicked)
     }
@@ -96,6 +101,7 @@ fun AppDetails(
 
 @Composable
 fun AppSignIn(
+    userViewModel: UserViewModel,
     onLoginClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -105,16 +111,16 @@ fun AppSignIn(
         modifier = modifier.padding(24.dp)
     ) {
         OutlinedTextField(
-            value = "",
-            onValueChange = { },
+            value = userViewModel.userEmail,
+            onValueChange = { userViewModel.updateEmail(it) },
             label = { Text(stringResource(R.string.email)) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp)
         )
         OutlinedTextField(
-            value = "",
-            onValueChange = { },
+            value = userViewModel.userPassword,
+            onValueChange = { userViewModel.updatePassword(it) },
             label = { Text(stringResource(R.string.password)) },
             modifier = Modifier
                 .fillMaxWidth()
