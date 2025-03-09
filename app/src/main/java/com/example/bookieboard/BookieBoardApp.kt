@@ -40,6 +40,7 @@ import kotlinx.coroutines.launch
 enum class BookieBoardScreen(@StringRes val title: Int) {
     Welcome(R.string.bookieboard),
     SignUp(R.string.sign_up),
+    Home(R.string.home)
 }
 
 @Composable
@@ -83,7 +84,7 @@ fun BookieBoardApp(
                     onLoginClicked = {
                         userViewModel.getUser()
                         if (userViewModel.authenticatedUser.email!!.isNotEmpty()) {
-                            // navigate to home screen
+                            navController.navigate(BookieBoardScreen.Home)
                         } else {
                             scope.launch {
                                 snackbarHostState.showSnackbar(

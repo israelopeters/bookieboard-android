@@ -215,10 +215,12 @@ fun AppDetailsPreview() {
 )
 @Composable
 fun AppLoginPreview() {
-    AppSignIn(
-        UserViewModel(ApiRepository(HttpClient())),
-        onLoginClicked = { }
-    )
+    BookieboardTheme {
+        AppSignIn(
+            UserViewModel(ApiRepository(HttpClient())),
+            onLoginClicked = { }
+        )
+    }
 }
 
 @Preview(
@@ -233,7 +235,9 @@ fun AppLoginPreview() {
 )
 @Composable
 fun AppSignUpPreview() {
-    AppSignUp(
-        onSignUpClicked = { }
-    )
+    BookieboardTheme {
+        AppSignUp(
+            onSignUpClicked = { }
+        )
+    }
 }
