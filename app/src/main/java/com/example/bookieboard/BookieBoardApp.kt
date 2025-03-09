@@ -39,9 +39,9 @@ import kotlinx.coroutines.launch
 
 // Enums for app screens
 enum class BookieBoardScreen(@StringRes val title: Int) {
-    Welcome(R.string.bookieboard),
-    SignUp(R.string.sign_up),
-    Home(R.string.home)
+    Welcome(title = R.string.welcome),
+    SignUp(title = R.string.sign_up),
+    Home(title = R.string.home)
 }
 
 @Composable

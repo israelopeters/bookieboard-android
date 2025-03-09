@@ -1,5 +1,6 @@
 package com.example.bookieboard.data
 
+import android.util.Log
 import com.example.bookieboard.model.User
 import com.example.bookieboard.model.UserCreation
 import io.ktor.client.HttpClient
@@ -13,7 +14,6 @@ import javax.inject.Inject
 
 class ApiRepository @Inject constructor(private val client: HttpClient) {
     val BASE_URL = "http://bookieboardapi-env.eba-2imwjb2j.eu-west-2.elasticbeanstalk.com"
-    var userCredentials: List<String> = listOf()
 
     suspend fun addNewUser(user: UserCreation): User = client
         .post("${BASE_URL}/api/v1/users/add").body()
@@ -25,7 +25,6 @@ class ApiRepository @Inject constructor(private val client: HttpClient) {
                 password = credentials[1]
             )
         }
-        userCredentials = credentials
         return response.processBody()
 
     }
