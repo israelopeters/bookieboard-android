@@ -32,6 +32,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.bookieboard.service.UserViewModel
+import com.example.bookieboard.ui.screens.HomeScreen
 import com.example.bookieboard.ui.screens.WelcomeScreen
 import com.example.bookieboard.ui.theme.BookieboardTheme
 import kotlinx.coroutines.launch
@@ -98,7 +99,9 @@ fun BookieBoardApp(
                     modifier = modifier.fillMaxSize()
                 )
             }
-
+            composable(route = BookieBoardScreen.Home.name) {
+                HomeScreen()
+            }
         }
     }
 }
