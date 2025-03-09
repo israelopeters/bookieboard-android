@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bookieboard.data.ApiRepository
 import com.example.bookieboard.model.User
+import com.example.bookieboard.model.UserRank
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -18,7 +19,7 @@ class UserViewModel @Inject constructor(private val apiRepository: ApiRepository
     var userEmail: String by mutableStateOf("")
     var userPassword: String by mutableStateOf("")
     var authenticatedUser by mutableStateOf(
-        User(null, null, null, null, null)
+        User("", "", "", UserRank.ROOKIE, listOf())
     )
 
     fun updateEmail(input: String) {

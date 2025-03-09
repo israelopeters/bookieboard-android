@@ -1,9 +1,9 @@
 package com.example.bookieboard.model
 
 data class User(
-    val email: String?,
-    val firstName: String?,
-    val lastName: String?,
-    val bookieRank: UserRank?,
-    val roles: List<Role>?
+    val email: String,
+    val firstName: String,
+    val lastName: String,
+    val bookieRank: UserRank,
+    val roles: List<Role>
 )

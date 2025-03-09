@@ -83,7 +83,7 @@ fun BookieBoardApp(
                     userViewModel = userViewModel,
                     onLoginClicked = {
                         userViewModel.getUser()
-                        if (userViewModel.authenticatedUser.email!!.isNotEmpty()) {
+                        if (userViewModel.authenticatedUser.email.isNotEmpty()) {
                             navController.navigate(BookieBoardScreen.Home)
                         } else {
                             scope.launch {
