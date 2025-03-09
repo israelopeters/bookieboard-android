@@ -19,7 +19,7 @@ class ApiRepository @Inject constructor(private val client: HttpClient) {
         .post("${BASE_URL}/api/v1/users/add").body()
 
     suspend fun getUser(credentials: List<String>): User {
-        val response = client.get("${BASE_URL}/api/v1/users/email?email={$credentials[0}") {
+        val response = client.get("${BASE_URL}/api/v1/users/email?email=${credentials[0]}") {
             basicAuth(
                 username = credentials[0],
                 password = credentials[1]
