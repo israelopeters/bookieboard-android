@@ -28,8 +28,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.bookieboard.R
+import com.example.bookieboard.data.ApiRepository
 import com.example.bookieboard.service.UserViewModel
 import com.example.bookieboard.ui.theme.BookieboardTheme
+import io.ktor.client.HttpClient
 
 @Composable
 fun WelcomeScreen(
@@ -177,6 +179,7 @@ fun AppSignUp(
 fun WelcomeScreenPreview() {
     BookieboardTheme {
         WelcomeScreen(
+            UserViewModel(ApiRepository(HttpClient())),
             onLoginClicked = { },
             onSignUpClicked = { }
         )
@@ -213,6 +216,7 @@ fun AppDetailsPreview() {
 @Composable
 fun AppLoginPreview() {
     AppSignIn(
+        UserViewModel(ApiRepository(HttpClient())),
         onLoginClicked = { }
     )
 }

@@ -7,4 +7,5 @@
     <string name="password">Password</string>
     <string name="not_yet_registered">Not registered yet?</string>
     <string name="sign_up">Sign up</string>
+    <string name="arrow_back">Arrow back</string>
 </resources>
