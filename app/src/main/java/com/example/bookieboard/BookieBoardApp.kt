@@ -32,6 +32,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.bookieboard.service.UserViewModel
+import com.example.bookieboard.ui.components.BookieBoardAppTopBar
 import com.example.bookieboard.ui.screens.HomeScreen
 import com.example.bookieboard.ui.screens.SignInSuccessScreen
 import com.example.bookieboard.ui.screens.WelcomeScreen
@@ -118,59 +119,5 @@ fun BookieBoardApp(
                     })
             }
         }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun BookieBoardAppTopBar(
-    currentScreen: BookieBoardScreen,
-    canNavigate: Boolean,
-    navigateUp: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    CenterAlignedTopAppBar(
-        title = {
-            Text(
-                text = stringResource(currentScreen.title),
-                style = MaterialTheme.typography.titleLarge
-            )
-        },
-        navigationIcon = {
-            if (canNavigate) {
-                IconButton(onClick = navigateUp) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = stringResource(R.string.arrow_back)
-                    )
-                }
-            }
-        },
-        colors = topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.surface,
-            titleContentColor = MaterialTheme.colorScheme.onSurface
-        ),
-        modifier = modifier.padding(8.dp).fillMaxWidth()
-    )
-}
-
-@Preview(
-    showBackground = true,
-    uiMode = UI_MODE_NIGHT_NO,
-    name = "DefaultPreviewLight"
-)
-@Preview(
-    showBackground = true,
-    uiMode = UI_MODE_NIGHT_YES,
-    name = "DefaultPreviewDark"
-)
-@Composable
-fun ReviewsAppTopBarPreview() {
-    BookieboardTheme {
-         BookieBoardAppTopBar(
-            currentScreen = BookieBoardScreen.SignUp,
-            canNavigate = true,
-            navigateUp = { },
-        )
     }
 }
