@@ -68,7 +68,7 @@ fun StatusSection(
     ){
         Text(
             text = "Hi ${userViewModel.authenticatedUser.firstName}! " +
-                    "Welcome to",
+                    "This is your",
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Normal,
             color = MaterialTheme.colorScheme.onBackground,

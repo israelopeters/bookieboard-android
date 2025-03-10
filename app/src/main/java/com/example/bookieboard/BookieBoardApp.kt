@@ -2,7 +2,6 @@ package com.example.bookieboard
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
-import android.util.Log
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -34,6 +33,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.bookieboard.service.UserViewModel
 import com.example.bookieboard.ui.screens.HomeScreen
+import com.example.bookieboard.ui.screens.SignInSuccessScreen
 import com.example.bookieboard.ui.screens.WelcomeScreen
 import com.example.bookieboard.ui.theme.BookieboardTheme
 import kotlinx.coroutines.launch
@@ -42,6 +42,7 @@ import kotlinx.coroutines.launch
 enum class BookieBoardScreen(@StringRes val title: Int) {
     Welcome(title = R.string.welcome),
     SignUp(title = R.string.sign_up),
+    SignUpSuccess(title = R.string.sign_up_success),
     Home(title = R.string.home)
 }
 
@@ -64,7 +65,8 @@ fun BookieBoardApp(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             val noTopBarScreens = listOf(
-                BookieBoardScreen.Welcome.name
+                BookieBoardScreen.Welcome.name,
+                BookieBoardScreen.SignUpSuccess.name
             )
             if (!noTopBarScreens.contains(currentScreen.name)) {
                 BookieBoardAppTopBar(
@@ -91,7 +93,7 @@ fun BookieBoardApp(
                             scope.launch {
                                 snackbarHostState.showSnackbar("Login successful!")
                             }
-                            navController.navigate(BookieBoardScreen.Home.name)
+                            navController.navigate(BookieBoardScreen.SignUpSuccess.name)
                         } else {
                             scope.launch {
                                 snackbarHostState.showSnackbar(
@@ -107,6 +109,13 @@ fun BookieBoardApp(
             }
             composable(route = BookieBoardScreen.Home.name) {
                 HomeScreen(userViewModel)
+            }
+            composable(route = BookieBoardScreen.SignUpSuccess.name) {
+                SignInSuccessScreen(
+                    userViewModel,
+                    onContinueClicked = {
+                        navController.navigate(BookieBoardScreen.Home.name)
+                    })
             }
         }
     }
@@ -141,7 +150,7 @@ fun BookieBoardAppTopBar(
             containerColor = MaterialTheme.colorScheme.surface,
             titleContentColor = MaterialTheme.colorScheme.onSurface
         ),
-        modifier = modifier.padding(16.dp).fillMaxWidth()
+        modifier = modifier.padding(8.dp).fillMaxWidth()
     )
 }
 
