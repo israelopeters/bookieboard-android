@@ -1,6 +1,5 @@
 package com.example.bookieboard.data
 
-import android.util.Log
 import com.example.bookieboard.model.User
 import com.example.bookieboard.model.UserCreation
 import io.ktor.client.HttpClient

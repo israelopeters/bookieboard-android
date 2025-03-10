@@ -2,6 +2,7 @@ package com.example.bookieboard
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import android.util.Log
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -44,6 +45,8 @@ enum class BookieBoardScreen(@StringRes val title: Int) {
     Home(title = R.string.home)
 }
 
+private val TAG: String = "BookieBoardActivity"
+
 @Composable
 fun BookieBoardApp(
     userViewModel: UserViewModel,
@@ -84,7 +87,10 @@ fun BookieBoardApp(
                     userViewModel = userViewModel,
                     onLoginClicked = {
                         userViewModel.getUser()
-                        if (userViewModel.authenticatedUser.email.isNotEmpty()) {
+                        if (userViewModel.authenticatedUser.firstName.isNotEmpty()) {
+                            scope.launch {
+                                snackbarHostState.showSnackbar("Login successful!")
+                            }
                             navController.navigate(BookieBoardScreen.Home.name)
                         } else {
                             scope.launch {
@@ -100,7 +106,7 @@ fun BookieBoardApp(
                 )
             }
             composable(route = BookieBoardScreen.Home.name) {
-                HomeScreen()
+                HomeScreen(userViewModel)
             }
         }
     }

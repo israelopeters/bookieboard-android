@@ -5,17 +5,38 @@ import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.paddingFromBaseline
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.material3.Button
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import com.example.bookieboard.R
+import com.example.bookieboard.data.ApiRepository
+import com.example.bookieboard.service.UserViewModel
 import com.example.bookieboard.ui.theme.BookieboardTheme
+import io.ktor.client.HttpClient
 
 @Composable
 fun HomeScreen(
+    userViewModel: UserViewModel,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -25,11 +46,113 @@ fun HomeScreen(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        Text(
-            text = "Coming soon",
-            color = MaterialTheme.colorScheme.onBackground)
+        StatusSection(userViewModel)
+
+        HorizontalDivider(
+            modifier = Modifier.padding(32.dp)
+        )
+
+        DifficultySelection()
     }
 }
+
+@Composable
+fun StatusSection(
+    userViewModel: UserViewModel,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
+    ){
+        Text(
+            text = "Hi ${userViewModel.authenticatedUser.firstName}! " +
+                    "Welcome to",
+            style = MaterialTheme.typography.headlineSmall,
+            fontWeight = FontWeight.Normal,
+            color = MaterialTheme.colorScheme.onBackground,
+            modifier = Modifier.padding(8.dp)
+        )
+        Text(
+            text = stringResource(R.string.bookieboard),
+            style = MaterialTheme.typography.headlineLarge,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onBackground,
+            modifier = Modifier.paddingFromBaseline(
+                top = 8.dp,
+                bottom = 8.dp
+            )
+        )
+        Text(
+            text = "Your current rank: ${userViewModel.authenticatedUser.bookieRank}",
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.Normal,
+            color = MaterialTheme.colorScheme.onBackground,
+            modifier = Modifier.padding(8.dp)
+        )
+    }
+}
+
+@Composable
+fun DifficultySelection(
+    modifier: Modifier = Modifier
+) {
+    Column(modifier = modifier) {
+        Text(
+            text = "Where would you like to start from?",
+            style = MaterialTheme.typography.bodyLarge,
+            fontWeight = FontWeight.Normal,
+            color = MaterialTheme.colorScheme.onBackground,
+            modifier = Modifier.padding(horizontal = 32.dp)
+        )
+
+        // Block below copied and slightly modified from Google's official Android documentation
+        val radioOptions = listOf("Let's take it easy", "Bring it on!", "Book lords only")
+        val (selectedOption, onOptionSelected) = remember { mutableStateOf(radioOptions[0]) }
+        // Note that Modifier.selectableGroup() is essential to ensure correct accessibility behavior
+        Column(
+            modifier.selectableGroup().padding(horizontal = 16.dp)
+        ) {
+            radioOptions.forEach { text ->
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .height(56.dp)
+                        .selectable(
+                            selected = (text == selectedOption),
+                            onClick = { onOptionSelected(text) },
+                            role = Role.RadioButton
+                        )
+                        .padding(horizontal = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    RadioButton(
+                        selected = (text == selectedOption),
+                        onClick = null // null recommended for accessibility with screen readers
+                    )
+                    Text(
+                        text = text,
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onBackground,
+                        modifier = Modifier.padding(start = 16.dp)
+                    )
+                }
+            }
+        }
+
+        Button(
+            onClick = { },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 72.dp, vertical = 16.dp)
+        ) {
+            Text("Play")
+        }
+    }
+
+}
+
 
 @Preview(
     showBackground = true,
@@ -44,6 +167,6 @@ fun HomeScreen(
 @Composable
 fun HomeScreenPreview() {
     BookieboardTheme {
-        HomeScreen()
+        HomeScreen(UserViewModel(ApiRepository(HttpClient())))
     }
 }
