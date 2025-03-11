@@ -30,15 +30,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.bookieboard.R
 import com.example.bookieboard.data.ApiRepository
-import com.example.bookieboard.model.DifficultyLevel
 import com.example.bookieboard.service.QuestionViewModel
-import com.example.bookieboard.service.UserViewModel
 import com.example.bookieboard.ui.theme.BookieboardTheme
 import io.ktor.client.HttpClient
 
 @Composable
-fun HomeScreen(
-    userViewModel: UserViewModel,
+fun QuestionScreen(
     questionViewModel: QuestionViewModel,
     modifier: Modifier = Modifier
 ) {
@@ -49,36 +46,32 @@ fun HomeScreen(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        StatusSection(userViewModel)
+        StatusSection(questionViewModel)
 
         HorizontalDivider(
             modifier = Modifier.padding(32.dp)
         )
 
-        DifficultySelection(questionViewModel)
+        QuestionSelection(questionViewModel)
     }
 }
 
 @Composable
 fun StatusSection(
-    userViewModel: UserViewModel,
+    questionViewModel: QuestionViewModel,
     modifier: Modifier = Modifier
 ) {
+    questionViewModel.getQuestions()
+    val questionCount = questionViewModel.getQuestionCount()
+    val currentQuestionIndex = questionViewModel.getCurrentQuestionIndex() + 1
+
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
     ){
         Text(
-            text = "Hi ${userViewModel.authenticatedUser.firstName}! " +
-                    "This is your",
-            style = MaterialTheme.typography.headlineSmall,
-            fontWeight = FontWeight.Normal,
-            color = MaterialTheme.colorScheme.onBackground,
-            modifier = Modifier.padding(8.dp)
-        )
-        Text(
-            text = stringResource(R.string.bookieboard),
+            text = stringResource(R.string.taking_it_easy),
             style = MaterialTheme.typography.headlineLarge,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onBackground,
@@ -88,7 +81,7 @@ fun StatusSection(
             )
         )
         Text(
-            text = "Your current rank: ${userViewModel.authenticatedUser.bookieRank}",
+            text = "Question $currentQuestionIndex of $questionCount",
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Normal,
             color = MaterialTheme.colorScheme.onBackground,
@@ -98,13 +91,13 @@ fun StatusSection(
 }
 
 @Composable
-fun DifficultySelection(
+fun QuestionSelection(
     questionViewModel: QuestionViewModel,
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier) {
         Text(
-            text = "Where would you like to start from?",
+            text = questionViewModel.getCurrentQuestion().detail,
             style = MaterialTheme.typography.bodyLarge,
             fontWeight = FontWeight.Normal,
             color = MaterialTheme.colorScheme.onBackground,
@@ -112,7 +105,7 @@ fun DifficultySelection(
         )
 
         // Block below copied and slightly modified from Google's official Android documentation
-        val radioOptions = listOf("Let's take it easy", "Bring it on!", "Book lords only")
+        val radioOptions = questionViewModel.getCurrentQuestion().options
         val (selectedOption, onOptionSelected) = remember { mutableStateOf(radioOptions[0]) }
         // Note that Modifier.selectableGroup() is essential to ensure correct accessibility behavior
         Column(
@@ -146,23 +139,20 @@ fun DifficultySelection(
         }
 
         Button(
-            onClick = {
-                when (selectedOption) {
-                    radioOptions[0] -> questionViewModel.setDifficultyLevel(DifficultyLevel.EASY)
-                    radioOptions[1] -> questionViewModel.setDifficultyLevel(DifficultyLevel.MEDIUM)
-                    radioOptions[2] -> questionViewModel.setDifficultyLevel(DifficultyLevel.HARD)
-                }
-            },
+            onClick = { },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 72.dp, vertical = 16.dp)
         ) {
-            Text("Play")
+            if (questionViewModel.isLastQuestion()) {
+                Text("Submit")
+            } else {
+                Text("Next")
+            }
         }
     }
 
 }
-
 
 @Preview(
     showBackground = true,
@@ -175,11 +165,8 @@ fun DifficultySelection(
     name = "DefaultPreviewDark"
 )
 @Composable
-fun HomeScreenPreview() {
+fun QuestionScreenPreview() {
     BookieboardTheme {
-        HomeScreen(
-            UserViewModel(ApiRepository(HttpClient())),
-            QuestionViewModel(ApiRepository(HttpClient()))
-        )
+        QuestionScreen(QuestionViewModel(ApiRepository(HttpClient())))
     }
 }

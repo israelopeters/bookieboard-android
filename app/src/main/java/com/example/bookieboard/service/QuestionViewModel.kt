@@ -16,6 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class QuestionViewModel @Inject constructor(private val apiRepository: ApiRepository): ViewModel() {
+    private var _selectedDifficultyLevel: DifficultyLevel by mutableStateOf(DifficultyLevel.EASY)
     private var _questionsList: List<Question> = mutableListOf(
         Question(
             0,
@@ -31,9 +32,13 @@ class QuestionViewModel @Inject constructor(private val apiRepository: ApiReposi
 
     fun getCurrentQuestion(): Question = _currentQuestion
 
-    fun getQuestions(difficultyLevel: DifficultyLevel) {
+    fun getQuestionCount() = _questionsList.size
+
+    fun getCurrentQuestionIndex() = _currentQuestionIndex
+
+    fun getQuestions() {
         viewModelScope.launch(Dispatchers.IO) {
-            _questionsList = apiRepository.getQuestions(difficultyLevel)
+            _questionsList = apiRepository.getQuestions(_selectedDifficultyLevel)
         }
     }
 
@@ -41,6 +46,10 @@ class QuestionViewModel @Inject constructor(private val apiRepository: ApiReposi
         if (_questionsList.size > _currentQuestionIndex) {
             _currentQuestionIndex++
         }
+    }
+
+    fun setDifficultyLevel(difficultyLevel: DifficultyLevel) {
+        _selectedDifficultyLevel = difficultyLevel
     }
 
     fun isLastQuestion(): Boolean = _questionsList.size == _currentQuestionIndex + 1

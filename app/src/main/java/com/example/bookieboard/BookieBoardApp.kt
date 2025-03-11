@@ -31,6 +31,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.bookieboard.service.QuestionViewModel
 import com.example.bookieboard.service.UserViewModel
 import com.example.bookieboard.ui.components.BookieBoardAppTopBar
 import com.example.bookieboard.ui.screens.HomeScreen
@@ -52,6 +53,7 @@ private val TAG: String = "BookieBoardActivity"
 @Composable
 fun BookieBoardApp(
     userViewModel: UserViewModel,
+    questionViewModel: QuestionViewModel,
     navController: NavHostController = rememberNavController(),
     modifier: Modifier = Modifier
 ) {
@@ -109,7 +111,7 @@ fun BookieBoardApp(
                 )
             }
             composable(route = BookieBoardScreen.Home.name) {
-                HomeScreen(userViewModel)
+                HomeScreen(userViewModel, questionViewModel)
             }
             composable(route = BookieBoardScreen.SignUpSuccess.name) {
                 SignInSuccessScreen(
