@@ -35,6 +35,7 @@ import com.example.bookieboard.service.QuestionViewModel
 import com.example.bookieboard.service.UserViewModel
 import com.example.bookieboard.ui.components.BookieBoardAppTopBar
 import com.example.bookieboard.ui.screens.HomeScreen
+import com.example.bookieboard.ui.screens.QuestionScreen
 import com.example.bookieboard.ui.screens.SignInSuccessScreen
 import com.example.bookieboard.ui.screens.WelcomeScreen
 import com.example.bookieboard.ui.theme.BookieboardTheme
@@ -45,7 +46,8 @@ enum class BookieBoardScreen(@StringRes val title: Int) {
     Welcome(title = R.string.welcome),
     SignUp(title = R.string.sign_up),
     SignUpSuccess(title = R.string.sign_up_success),
-    Home(title = R.string.home)
+    Home(title = R.string.home),
+    Question(title = R.string.question)
 }
 
 private val TAG: String = "BookieBoardActivity"
@@ -111,7 +113,12 @@ fun BookieBoardApp(
                 )
             }
             composable(route = BookieBoardScreen.Home.name) {
-                HomeScreen(userViewModel, questionViewModel)
+                HomeScreen(
+                    userViewModel,
+                    questionViewModel,
+                    onPlayClicked = {
+                        navController.navigate(BookieBoardScreen.Question.name)
+                    })
             }
             composable(route = BookieBoardScreen.SignUpSuccess.name) {
                 SignInSuccessScreen(
@@ -120,6 +127,9 @@ fun BookieBoardApp(
                         navController.navigate(BookieBoardScreen.Home.name)
                     }
                 )
+            }
+            composable(route = BookieBoardScreen.Question.name) {
+                QuestionScreen(questionViewModel)
             }
         }
     }

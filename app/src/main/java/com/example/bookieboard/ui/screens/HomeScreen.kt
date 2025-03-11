@@ -40,6 +40,7 @@ import io.ktor.client.HttpClient
 fun HomeScreen(
     userViewModel: UserViewModel,
     questionViewModel: QuestionViewModel,
+    onPlayClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -55,7 +56,7 @@ fun HomeScreen(
             modifier = Modifier.padding(32.dp)
         )
 
-        DifficultySelection(questionViewModel)
+        DifficultySelection(questionViewModel, onPlayClicked)
     }
 }
 
@@ -100,6 +101,7 @@ fun StatusSection(
 @Composable
 fun DifficultySelection(
     questionViewModel: QuestionViewModel,
+    onPlayClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier) {
@@ -152,6 +154,7 @@ fun DifficultySelection(
                     radioOptions[1] -> questionViewModel.setDifficultyLevel(DifficultyLevel.MEDIUM)
                     radioOptions[2] -> questionViewModel.setDifficultyLevel(DifficultyLevel.HARD)
                 }
+                onPlayClicked()
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -179,7 +182,8 @@ fun HomeScreenPreview() {
     BookieboardTheme {
         HomeScreen(
             UserViewModel(ApiRepository(HttpClient())),
-            QuestionViewModel(ApiRepository(HttpClient()))
+            QuestionViewModel(ApiRepository(HttpClient())),
+            onPlayClicked = { }
         )
     }
 }

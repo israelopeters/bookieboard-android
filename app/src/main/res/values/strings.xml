@@ -12,4 +12,5 @@
     <string name="welcome">Welcome</string>
     <string name="sign_up_success">Sign Up Success</string>
     <string name="taking_it_easy">Taking It Easy</string>
+    <string name="question">Question</string>
 </resources>
