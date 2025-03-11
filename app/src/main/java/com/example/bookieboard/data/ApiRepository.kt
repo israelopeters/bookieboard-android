@@ -1,5 +1,7 @@
 package com.example.bookieboard.data
 
+import com.example.bookieboard.model.DifficultyLevel
+import com.example.bookieboard.model.Question
 import com.example.bookieboard.model.User
 import com.example.bookieboard.model.UserCreation
 import io.ktor.client.HttpClient
@@ -25,7 +27,13 @@ class ApiRepository @Inject constructor(private val client: HttpClient) {
             )
         }
         return response.processBody()
+    }
 
+    suspend fun getQuestions(difficultyLevel: DifficultyLevel): List<Question> {
+        val response = client.get(
+            "${BASE_URL}/api/v1/questions/difficulty?difficultyLevel=${difficultyLevel}"
+        )
+        return response.processBody()
     }
 
     // An extension function to handle the response body and exceptions when getting a user
