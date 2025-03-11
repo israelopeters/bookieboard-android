@@ -116,7 +116,8 @@ fun BookieBoardApp(
                     userViewModel,
                     onContinueClicked = {
                         navController.navigate(BookieBoardScreen.Home.name)
-                    })
+                    }
+                )
             }
         }
     }
