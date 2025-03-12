@@ -110,7 +110,10 @@ fun BookieBoardApp(
                 )
             }
             composable(route = BookieBoardScreen.Question.name) {
-                QuestionScreen(questionViewModel)
+                QuestionScreen(
+                    { questionViewModel.updateCurrentQuestion() },
+                    questionViewModel
+                )
             }
         }
     }

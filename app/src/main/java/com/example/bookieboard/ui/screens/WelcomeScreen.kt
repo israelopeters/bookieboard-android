@@ -57,7 +57,6 @@ fun WelcomeScreen(
 
         AppSignUp(onSignUpClicked = onSignUpClicked)
     }
-
 }
 
 
@@ -99,7 +98,6 @@ fun AppDetails(
                 .clip(shape = MaterialTheme.shapes.medium)
         )
     }
-
 }
 
 @Composable

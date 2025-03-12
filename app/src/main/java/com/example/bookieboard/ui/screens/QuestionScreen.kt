@@ -36,6 +36,7 @@ import io.ktor.client.HttpClient
 
 @Composable
 fun QuestionScreen(
+    onNextClicked: () -> Unit,
     questionViewModel: QuestionViewModel,
     modifier: Modifier = Modifier
 ) {
@@ -52,7 +53,10 @@ fun QuestionScreen(
             modifier = Modifier.padding(32.dp)
         )
 
-        QuestionSelection(questionViewModel)
+        QuestionSelection(
+            onNextClicked,
+            questionViewModel
+        )
     }
 }
 
@@ -89,6 +93,7 @@ fun StatusSection(
 
 @Composable
 fun QuestionSelection(
+    onNextClicked: () -> Unit,
     questionViewModel: QuestionViewModel,
     modifier: Modifier = Modifier
 ) {
@@ -136,7 +141,7 @@ fun QuestionSelection(
         }
 
         Button(
-            onClick = { },
+            onClick = onNextClicked,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 72.dp, vertical = 16.dp)
@@ -163,6 +168,9 @@ fun QuestionSelection(
 @Composable
 fun QuestionScreenPreview() {
     BookieboardTheme {
-        QuestionScreen(QuestionViewModel(ApiRepository(HttpClient())))
+        QuestionScreen(
+            onNextClicked = { },
+            QuestionViewModel(ApiRepository(HttpClient()))
+        )
     }
 }
