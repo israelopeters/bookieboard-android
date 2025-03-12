@@ -141,7 +141,11 @@ fun QuestionSelection(
         }
 
         Button(
-            onClick = onNextClicked,
+            onClick = {
+                // Check whether selected option is equal to correct option
+                // Call viewmodel method to update the score accordingly
+                onNextClicked()
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 72.dp, vertical = 16.dp)
