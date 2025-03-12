@@ -1,5 +1,9 @@
 package com.example.bookieboard.data
 
+import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import com.example.bookieboard.model.DifficultyLevel
 import com.example.bookieboard.model.Question
 import com.example.bookieboard.model.User
@@ -14,25 +18,39 @@ import io.ktor.http.HttpStatusCode
 import javax.inject.Inject
 
 class ApiRepository @Inject constructor(private val client: HttpClient) {
-    val BASE_URL = "http://bookieboardapi-env.eba-2imwjb2j.eu-west-2.elasticbeanstalk.com"
+    private var userCredentials: List<String> = listOf("", "")
 
     suspend fun addNewUser(user: UserCreation): User = client
-        .post("${BASE_URL}/api/v1/users/add").body()
+        .post("$/api/v1/users/add").body()
 
     suspend fun getUser(credentials: List<String>): User {
-        val response = client.get("${BASE_URL}/api/v1/users/email?email=${credentials[0]}") {
+        val response = client.get(
+            "/api/v1/users/email?email=${credentials[0]}"
+        ) {
             basicAuth(
                 username = credentials[0],
                 password = credentials[1]
             )
         }
+        if (response.status == HttpStatusCode.OK) {
+            userCredentials = credentials
+        }
+        Log.v("BookieBoardActivity", "Get User: username --- ${userCredentials[0]}")
         return response.processBody()
     }
 
     suspend fun getQuestions(difficultyLevel: DifficultyLevel): List<Question> {
+        Log.v("BookieBoardActivity", "Get Questions before call: username --- ${userCredentials[0]}")
         val response = client.get(
-            "${BASE_URL}/api/v1/questions/difficulty?difficultyLevel=${difficultyLevel}"
-        )
+            "/api/v1/questions/difficulty?difficultyLevel=${difficultyLevel}"
+        ) {
+            basicAuth(
+                username = userCredentials[0],
+                password = userCredentials[1]
+            )
+        }
+        Log.v("BookieBoardActivity", "Get Questions after call: username --- ${userCredentials[0]}")
+        Log.v("BookieBoardActivity", "Get Questions after call: ${response.body<List<Question>>()}")
         return response.processBody()
     }
 

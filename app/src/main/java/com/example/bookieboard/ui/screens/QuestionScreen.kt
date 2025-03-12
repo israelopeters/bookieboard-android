@@ -61,10 +61,6 @@ fun StatusSection(
     questionViewModel: QuestionViewModel,
     modifier: Modifier = Modifier
 ) {
-    questionViewModel.getQuestions()
-    val questionCount = questionViewModel.getQuestionCount()
-    val currentQuestionIndex = questionViewModel.getCurrentQuestionIndex() + 1
-
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -81,7 +77,8 @@ fun StatusSection(
             )
         )
         Text(
-            text = "Question $currentQuestionIndex of $questionCount",
+            text = "Question ${questionViewModel.getCurrentQuestionIndex() + 1}" +
+                    " of ${questionViewModel.getQuestionCount()}",
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Normal,
             color = MaterialTheme.colorScheme.onBackground,
@@ -151,7 +148,6 @@ fun QuestionSelection(
             }
         }
     }
-
 }
 
 @Preview(

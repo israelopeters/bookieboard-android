@@ -2,6 +2,7 @@ package com.example.bookieboard.service
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
@@ -17,7 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class QuestionViewModel @Inject constructor(private val apiRepository: ApiRepository): ViewModel() {
     private var _selectedDifficultyLevel: DifficultyLevel by mutableStateOf(DifficultyLevel.EASY)
-    private var _questionsList: List<Question> = mutableListOf(
+    private var _questionsList: List<Question> = mutableStateListOf(
         Question(
             0,
             "This is a test question",
@@ -26,11 +27,8 @@ class QuestionViewModel @Inject constructor(private val apiRepository: ApiReposi
         )
     )
     private var _currentQuestionIndex by mutableIntStateOf(0)
-    private var _currentQuestion by mutableStateOf(
-        _questionsList[_currentQuestionIndex]
-    )
 
-    fun getCurrentQuestion(): Question = _currentQuestion
+    fun getCurrentQuestion(): Question = _questionsList[_currentQuestionIndex]
 
     fun getQuestionCount() = _questionsList.size
 
@@ -43,7 +41,7 @@ class QuestionViewModel @Inject constructor(private val apiRepository: ApiReposi
     }
 
     fun updateCurrentQuestion() {
-        if (_questionsList.size > _currentQuestionIndex) {
+        if (_questionsList.size - 1 > _currentQuestionIndex) {
             _currentQuestionIndex++
         }
     }

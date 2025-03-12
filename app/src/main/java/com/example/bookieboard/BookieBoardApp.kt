@@ -77,9 +77,6 @@ fun BookieBoardApp(
                     onLoginClicked = {
                         userViewModel.getUser()
                         if (userViewModel.authenticatedUser.firstName.isNotEmpty()) {
-                            scope.launch {
-                                snackbarHostState.showSnackbar("Login successful!")
-                            }
                             navController.navigate(BookieBoardScreen.SignUpSuccess.name)
                         } else {
                             scope.launch {
@@ -99,6 +96,8 @@ fun BookieBoardApp(
                     userViewModel,
                     questionViewModel,
                     onPlayClicked = {
+                        // Load questions from remote source before navigating to Questions Screen
+                        questionViewModel.getQuestions()
                         navController.navigate(BookieBoardScreen.Question.name)
                     })
             }
