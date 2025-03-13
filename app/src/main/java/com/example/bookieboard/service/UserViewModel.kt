@@ -18,7 +18,7 @@ class UserViewModel @Inject constructor(private val apiRepository: ApiRepository
 
     var userEmail: String by mutableStateOf("")
     var userPassword: String by mutableStateOf("")
-    var authenticatedUser = User("", "", "", UserRank.ROOKIE, listOf())
+    var authenticatedUser = User("", "", "", 0, UserRank.ROOKIE, listOf())
 
     fun updateEmail(input: String) {
         userEmail = input

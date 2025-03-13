@@ -23,6 +23,7 @@ class QuestionViewModel @Inject constructor(private val apiRepository: ApiReposi
             0,
             "This is a test question",
             listOf("Option 1", "Option 2", "Option 3", "Option 4"),
+            2,
             DifficultyLevel.EASY
         )
     )
