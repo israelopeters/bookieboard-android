@@ -38,6 +38,14 @@ class UserViewModel @Inject constructor(private val apiRepository: ApiRepository
         }
     }
 
+    fun updateBookieBoardScore(newScore: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            safelyCall {
+                authenticatedUser = apiRepository.updateUserScore(newScore)
+            }
+        }
+    }
+
     suspend fun <T> safelyCall(execute: suspend () -> T): Result<T> = try {
         Result.success(execute())
     } catch (e: Exception) {

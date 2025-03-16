@@ -29,6 +29,8 @@ class QuestionViewModel @Inject constructor(private val apiRepository: ApiReposi
     )
     private var _currentQuestionIndex by mutableIntStateOf(0)
 
+    private var _currentPlayScore by mutableIntStateOf(0)
+
     fun getCurrentQuestion(): Question = _questionsList[_currentQuestionIndex]
 
     fun getQuestionCount() = _questionsList.size
@@ -41,6 +43,8 @@ class QuestionViewModel @Inject constructor(private val apiRepository: ApiReposi
         }
     }
 
+    fun getCurrentPlayScore() = _currentPlayScore
+
     fun updateCurrentQuestion() {
         if (_questionsList.size - 1 > _currentQuestionIndex) {
             _currentQuestionIndex++
@@ -49,6 +53,14 @@ class QuestionViewModel @Inject constructor(private val apiRepository: ApiReposi
 
     fun setDifficultyLevel(difficultyLevel: DifficultyLevel) {
         _selectedDifficultyLevel = difficultyLevel
+    }
+
+    fun updateCurrentPlayScore() {
+        _currentPlayScore++
+    }
+
+    fun resetCurrentQuestionIndex() {
+        _currentQuestionIndex = 0
     }
 
     fun isLastQuestion(): Boolean = _questionsList.size == _currentQuestionIndex + 1

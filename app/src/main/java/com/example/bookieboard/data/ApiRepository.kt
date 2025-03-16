@@ -12,9 +12,13 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.basicAuth
 import io.ktor.client.request.get
+import io.ktor.client.request.patch
 import io.ktor.client.request.post
+import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
+import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
+import io.ktor.http.contentType
 import javax.inject.Inject
 
 class ApiRepository @Inject constructor(private val client: HttpClient) {
@@ -35,12 +39,10 @@ class ApiRepository @Inject constructor(private val client: HttpClient) {
         if (response.status == HttpStatusCode.OK) {
             userCredentials = credentials
         }
-        Log.v("BookieBoardActivity", "Get User: username --- ${userCredentials[0]}")
         return response.processBody()
     }
 
     suspend fun getQuestions(difficultyLevel: DifficultyLevel): List<Question> {
-        Log.v("BookieBoardActivity", "Get Questions before call: username --- ${userCredentials[0]}")
         val response = client.get(
             "/api/v1/questions/difficulty?difficultyLevel=${difficultyLevel}"
         ) {
@@ -49,8 +51,24 @@ class ApiRepository @Inject constructor(private val client: HttpClient) {
                 password = userCredentials[1]
             )
         }
-        Log.v("BookieBoardActivity", "Get Questions after call: username --- ${userCredentials[0]}")
-        Log.v("BookieBoardActivity", "Get Questions after call: ${response.body<List<Question>>()}")
+        return response.processBody()
+    }
+
+    suspend fun updateUserScore(newScore: Int): User {
+        val updates: HashMap<String, Any> = HashMap()
+        updates["email"] = userCredentials[0]
+        updates["bookieScore"] = newScore
+
+        Log.v("BookieBoardActivity", "Updates object: $updates")
+        val response = client.patch("/api/v1/users/update") {
+            contentType(ContentType.Application.Json)
+            setBody(updates)
+            basicAuth(
+                username = userCredentials[0],
+                password = userCredentials[1]
+            )
+        }
+        Log.v("BookieBoardActivity", "Server response: ${response.body<User>()}")
         return response.processBody()
     }
 

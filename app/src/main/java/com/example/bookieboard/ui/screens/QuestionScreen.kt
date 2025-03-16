@@ -37,6 +37,7 @@ import io.ktor.client.HttpClient
 @Composable
 fun QuestionScreen(
     onNextClicked: () -> Unit,
+    onSubmitClicked: () -> Unit,
     questionViewModel: QuestionViewModel,
     modifier: Modifier = Modifier
 ) {
@@ -55,6 +56,7 @@ fun QuestionScreen(
 
         QuestionSelection(
             onNextClicked,
+            onSubmitClicked,
             questionViewModel
         )
     }
@@ -94,6 +96,7 @@ fun StatusSection(
 @Composable
 fun QuestionSelection(
     onNextClicked: () -> Unit,
+    onSubmitClicked: () -> Unit,
     questionViewModel: QuestionViewModel,
     modifier: Modifier = Modifier
 ) {
@@ -108,6 +111,7 @@ fun QuestionSelection(
 
         // Block below copied and slightly modified from Google's official Android documentation
         val radioOptions = questionViewModel.getCurrentQuestion().options
+        val correctOption = questionViewModel.getCurrentQuestion().correctOption
         val (selectedOption, onOptionSelected) = remember { mutableStateOf(radioOptions[0]) }
         // Note that Modifier.selectableGroup() is essential to ensure correct accessibility behavior
         Column(
@@ -142,9 +146,14 @@ fun QuestionSelection(
 
         Button(
             onClick = {
-                // Check whether selected option is equal to correct option
-                // Call viewmodel method to update the score accordingly
-                onNextClicked()
+                if (selectedOption == radioOptions[correctOption]) {
+                    questionViewModel.updateCurrentPlayScore()
+                }
+                if (questionViewModel.isLastQuestion()) {
+                    onSubmitClicked()
+                } else {
+                    onNextClicked()
+                }
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -174,6 +183,7 @@ fun QuestionScreenPreview() {
     BookieboardTheme {
         QuestionScreen(
             onNextClicked = { },
+            onSubmitClicked = { },
             QuestionViewModel(ApiRepository(HttpClient()))
         )
     }

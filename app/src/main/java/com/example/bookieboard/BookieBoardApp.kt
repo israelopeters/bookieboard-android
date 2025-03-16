@@ -19,6 +19,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.bookieboard.service.QuestionViewModel
 import com.example.bookieboard.service.UserViewModel
 import com.example.bookieboard.ui.components.BookieBoardAppTopBar
+import com.example.bookieboard.ui.screens.BookieBoardScreen
 import com.example.bookieboard.ui.screens.HomeScreen
 import com.example.bookieboard.ui.screens.QuestionScreen
 import com.example.bookieboard.ui.screens.SignInSuccessScreen
@@ -26,12 +27,13 @@ import com.example.bookieboard.ui.screens.WelcomeScreen
 import kotlinx.coroutines.launch
 
 // Enums for app screens
-enum class BookieBoardScreen(@StringRes val title: Int) {
+enum class AppScreen(@StringRes val title: Int) {
     Welcome(title = R.string.welcome),
     SignUp(title = R.string.sign_up),
     SignUpSuccess(title = R.string.sign_up_success),
     Home(title = R.string.home),
-    Question(title = R.string.question)
+    Question(title = R.string.question),
+    BookieBoard(title = R.string.bookieboard)
 }
 
 @Composable
@@ -42,8 +44,8 @@ fun BookieBoardApp(
     modifier: Modifier = Modifier
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
-    val currentScreen = BookieBoardScreen.valueOf(
-        backStackEntry?.destination?.route ?: BookieBoardScreen.Welcome.name
+    val currentScreen = AppScreen.valueOf(
+        backStackEntry?.destination?.route ?: AppScreen.Welcome.name
     )
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -52,8 +54,8 @@ fun BookieBoardApp(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             val noTopBarScreens = listOf(
-                BookieBoardScreen.Welcome.name,
-                BookieBoardScreen.SignUpSuccess.name
+                AppScreen.Welcome.name,
+                AppScreen.SignUpSuccess.name
             )
             if (!noTopBarScreens.contains(currentScreen.name)) {
                 BookieBoardAppTopBar(
@@ -68,16 +70,16 @@ fun BookieBoardApp(
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = BookieBoardScreen.Welcome.name,
+            startDestination = AppScreen.Welcome.name,
             modifier = Modifier.padding(innerPadding)
         ) {
-            composable(route = BookieBoardScreen.Welcome.name) {
+            composable(route = AppScreen.Welcome.name) {
                 WelcomeScreen(
                     userViewModel = userViewModel,
                     onLoginClicked = {
                         userViewModel.getUser()
                         if (userViewModel.authenticatedUser.firstName.isNotEmpty()) {
-                            navController.navigate(BookieBoardScreen.SignUpSuccess.name)
+                            navController.navigate(AppScreen.SignUpSuccess.name)
                         } else {
                             scope.launch {
                                 snackbarHostState.showSnackbar(
@@ -91,28 +93,44 @@ fun BookieBoardApp(
                     modifier = modifier.fillMaxSize()
                 )
             }
-            composable(route = BookieBoardScreen.Home.name) {
+            composable(route = AppScreen.Home.name) {
                 HomeScreen(
                     userViewModel,
                     questionViewModel,
                     onPlayClicked = {
                         // Load questions from remote source before navigating to Questions Screen
                         questionViewModel.getQuestions()
-                        navController.navigate(BookieBoardScreen.Question.name)
+                        navController.navigate(AppScreen.Question.name)
                     })
             }
-            composable(route = BookieBoardScreen.SignUpSuccess.name) {
+            composable(route = AppScreen.SignUpSuccess.name) {
                 SignInSuccessScreen(
                     userViewModel,
                     onContinueClicked = {
-                        navController.navigate(BookieBoardScreen.Home.name)
+                        navController.navigate(AppScreen.Home.name)
                     }
                 )
             }
-            composable(route = BookieBoardScreen.Question.name) {
+            composable(route = AppScreen.Question.name) {
                 QuestionScreen(
-                    { questionViewModel.updateCurrentQuestion() },
-                    questionViewModel
+                    onSubmitClicked = {
+                        val currentPlayScore = questionViewModel.getCurrentPlayScore()
+                        userViewModel.updateBookieBoardScore(currentPlayScore)
+                        questionViewModel.resetCurrentQuestionIndex()
+                        navController.navigate(AppScreen.BookieBoard.name)
+                    },
+                    onNextClicked = {
+                        questionViewModel.updateCurrentQuestion()
+                    },
+                    questionViewModel = questionViewModel
+                )
+            }
+            composable(route = AppScreen.BookieBoard.name) {
+                BookieBoardScreen(
+                    userViewModel,
+                    questionViewModel,
+                    onViewBookieBoardClicked = { },
+                    onHomeClicked =  { navController.navigate(AppScreen.Home.name) }
                 )
             }
         }
