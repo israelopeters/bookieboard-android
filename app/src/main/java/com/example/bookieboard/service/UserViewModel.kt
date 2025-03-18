@@ -16,16 +16,20 @@ import javax.inject.Inject
 @HiltViewModel
 class UserViewModel @Inject constructor(private val apiRepository: ApiRepository): ViewModel() {
 
-    var userEmail: String by mutableStateOf("")
-    var userPassword: String by mutableStateOf("")
-    var authenticatedUser = User("", "", "", 0, UserRank.ROOKIE, listOf())
+    var userEmail by mutableStateOf("")
+    var userPassword by mutableStateOf("")
+    var authenticatedUser by mutableStateOf(User("", "", "", 0, UserRank.ROOKIE, listOf()))
 
     fun updateEmail(input: String) {
-        userEmail = input
+        viewModelScope.launch {
+            userEmail = input
+        }
     }
 
     fun updatePassword(input: String) {
-        userPassword = input
+        viewModelScope.launch {
+            userPassword = input
+        }
     }
 
     fun getUser() {

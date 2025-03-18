@@ -25,7 +25,7 @@ class ApiRepository @Inject constructor(private val client: HttpClient) {
     private var userCredentials: List<String> = listOf("", "")
 
     suspend fun addNewUser(user: UserCreation): User = client
-        .post("$/api/v1/users/add").body()
+        .post("/api/v1/users/add").body()
 
     suspend fun getUser(credentials: List<String>): User {
         val response = client.get(
@@ -74,7 +74,8 @@ class ApiRepository @Inject constructor(private val client: HttpClient) {
 
     // An extension function to handle the response body and exceptions when getting a user
     suspend inline fun <reified T> HttpResponse.processBody(): T {
-        if (this.status == HttpStatusCode.OK) {
+        if (this.status == HttpStatusCode.OK || this.status == HttpStatusCode.Accepted) {
+            // Accepted status code caters to updateUserScore server response success code
             return body<T>()
         } else if (this.status.value == 404) {
             throw Exception("User not found!")

@@ -19,8 +19,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -133,8 +135,17 @@ fun DifficultySelection(
                         .padding(horizontal = 16.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
+                    // Only make EASY questions available for now
+                    var enabledState by remember { mutableStateOf(true) }
+                    if (selectedOption != "Let's take it easy") {
+                        enabledState = false
+                    } else {
+                        enabledState = true
+                    }
+
                     RadioButton(
                         selected = (text == selectedOption),
+                        enabled = enabledState,
                         onClick = null // null recommended for accessibility with screen readers
                     )
                     Text(
@@ -154,6 +165,7 @@ fun DifficultySelection(
                     radioOptions[1] -> questionViewModel.setDifficultyLevel(DifficultyLevel.MEDIUM)
                     radioOptions[2] -> questionViewModel.setDifficultyLevel(DifficultyLevel.HARD)
                 }
+                questionViewModel.getQuestions()
                 onPlayClicked()
             },
             modifier = Modifier

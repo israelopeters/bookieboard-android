@@ -87,7 +87,6 @@ fun BookieBoardApp(
                                 )
                             }
                         }
-
                     },
                     onSignUpClicked = { }, // navigate to signup screen
                     modifier = modifier.fillMaxSize()
@@ -98,8 +97,6 @@ fun BookieBoardApp(
                     userViewModel,
                     questionViewModel,
                     onPlayClicked = {
-                        // Load questions from remote source before navigating to Questions Screen
-                        questionViewModel.getQuestions()
                         navController.navigate(AppScreen.Question.name)
                     })
             }
@@ -130,7 +127,10 @@ fun BookieBoardApp(
                     userViewModel,
                     questionViewModel,
                     onViewBookieBoardClicked = { },
-                    onHomeClicked =  { navController.navigate(AppScreen.Home.name) }
+                    onHomeClicked =  {
+                        questionViewModel.resetCurrentPlayScore()
+                        navController.navigate(AppScreen.Home.name)
+                    }
                 )
             }
         }

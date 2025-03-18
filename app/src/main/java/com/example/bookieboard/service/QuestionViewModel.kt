@@ -29,7 +29,7 @@ class QuestionViewModel @Inject constructor(private val apiRepository: ApiReposi
     )
     private var _currentQuestionIndex by mutableIntStateOf(0)
 
-    private var _currentPlayScore by mutableIntStateOf(0)
+    private var _currentPlayScore = 0
 
     fun getCurrentQuestion(): Question = _questionsList[_currentQuestionIndex]
 
@@ -61,6 +61,10 @@ class QuestionViewModel @Inject constructor(private val apiRepository: ApiReposi
 
     fun resetCurrentQuestionIndex() {
         _currentQuestionIndex = 0
+    }
+
+    fun resetCurrentPlayScore() {
+        _currentPlayScore = 0
     }
 
     fun isLastQuestion(): Boolean = _questionsList.size == _currentQuestionIndex + 1
