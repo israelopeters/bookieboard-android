@@ -73,7 +73,7 @@ fun StatusSection(
         modifier = modifier
     ){
         Text(
-            text = "Hi ${userViewModel.authenticatedUser.firstName}! " +
+            text = "Hi ${userViewModel.currentUser.firstName}! " +
                     "This is your",
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Normal,
@@ -91,7 +91,7 @@ fun StatusSection(
             )
         )
         Text(
-            text = "Your current rank: ${userViewModel.authenticatedUser.bookieRank}",
+            text = "Your current rank: ${userViewModel.currentUser.bookieRank}",
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Normal,
             color = MaterialTheme.colorScheme.onBackground,

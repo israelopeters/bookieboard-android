@@ -94,8 +94,8 @@ fun ScoreStatus(
             modifier = Modifier.padding(24.dp)
         ) {
             Text(
-                text = "Player: ${userViewModel.authenticatedUser.firstName} " +
-                        " ${userViewModel.authenticatedUser.lastName}",
+                text = "Player: ${userViewModel.currentUser.firstName} " +
+                        " ${userViewModel.currentUser.lastName}",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Normal,
                 color = MaterialTheme.colorScheme.onBackground,
@@ -109,14 +109,14 @@ fun ScoreStatus(
                 modifier = Modifier.padding(8.dp)
             )
             Text(
-                text = "All-time score: ${userViewModel.authenticatedUser.bookieScore}",
+                text = "All-time score: ${userViewModel.currentUser.bookieScore}",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Normal,
                 color = MaterialTheme.colorScheme.onBackground,
                 modifier = Modifier.padding(8.dp)
             )
             Text(
-                text = "Rank: ${userViewModel.authenticatedUser.bookieRank}",
+                text = "Rank: ${userViewModel.currentUser.bookieRank}",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Normal,
                 color = MaterialTheme.colorScheme.onBackground,

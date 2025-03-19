@@ -1,5 +1,6 @@
 package com.example.bookieboard
 
+import android.util.Log
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -16,6 +17,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.bookieboard.model.User
 import com.example.bookieboard.service.QuestionViewModel
 import com.example.bookieboard.service.UserViewModel
 import com.example.bookieboard.ui.components.BookieBoardAppTopBar
@@ -24,13 +26,14 @@ import com.example.bookieboard.ui.screens.HomeScreen
 import com.example.bookieboard.ui.screens.QuestionScreen
 import com.example.bookieboard.ui.screens.SignInSuccessScreen
 import com.example.bookieboard.ui.screens.WelcomeScreen
+import io.ktor.client.call.body
 import kotlinx.coroutines.launch
 
 // Enums for app screens
 enum class AppScreen(@StringRes val title: Int) {
     Welcome(title = R.string.welcome),
     SignUp(title = R.string.sign_up),
-    SignUpSuccess(title = R.string.sign_up_success),
+    SignInSuccess(title = R.string.sign_in_success),
     Home(title = R.string.home),
     Question(title = R.string.question),
     BookieBoard(title = R.string.bookieboard)
@@ -55,7 +58,7 @@ fun BookieBoardApp(
         topBar = {
             val noTopBarScreens = listOf(
                 AppScreen.Welcome.name,
-                AppScreen.SignUpSuccess.name
+                AppScreen.SignInSuccess.name
             )
             if (!noTopBarScreens.contains(currentScreen.name)) {
                 BookieBoardAppTopBar(
@@ -77,10 +80,21 @@ fun BookieBoardApp(
                 WelcomeScreen(
                     userViewModel = userViewModel,
                     onLoginClicked = {
+                        Log.v("BookieBoardActivity",
+                            "Before logging in: ${userViewModel.currentUser}"
+                        )
+                        Log.v("BookieBoardActivity",
+                            "Before logging in: ${userViewModel.userEmail}"
+                        )
                         userViewModel.getUser()
-                        if (userViewModel.authenticatedUser.firstName.isNotEmpty()) {
-                            navController.navigate(AppScreen.SignUpSuccess.name)
+                        Log.v("BookieBoardActivity", "After logging in: ${userViewModel.currentUser}")
+                        Log.v("BookieBoardActivity",
+                            "Before logging in: ${userViewModel.userEmail}"
+                        )
+                        if (userViewModel.currentUser.isLoggedIn) {
+                            navController.navigate(AppScreen.SignInSuccess.name)
                         } else {
+                            Log.v("BookieBoardActivity", "At login failure: ${userViewModel.currentUser}")
                             scope.launch {
                                 snackbarHostState.showSnackbar(
                                     "Login error. Enter correct credentials."
@@ -100,7 +114,7 @@ fun BookieBoardApp(
                         navController.navigate(AppScreen.Question.name)
                     })
             }
-            composable(route = AppScreen.SignUpSuccess.name) {
+            composable(route = AppScreen.SignInSuccess.name) {
                 SignInSuccessScreen(
                     userViewModel,
                     onContinueClicked = {

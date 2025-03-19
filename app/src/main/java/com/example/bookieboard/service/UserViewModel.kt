@@ -6,8 +6,6 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bookieboard.data.ApiRepository
-import com.example.bookieboard.model.User
-import com.example.bookieboard.model.UserRank
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -18,16 +16,16 @@ class UserViewModel @Inject constructor(private val apiRepository: ApiRepository
 
     var userEmail by mutableStateOf("")
     var userPassword by mutableStateOf("")
-    var authenticatedUser by mutableStateOf(User("", "", "", 0, UserRank.ROOKIE, listOf()))
+    var currentUser by mutableStateOf(UserUiState())
 
     fun updateEmail(input: String) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             userEmail = input
         }
     }
 
     fun updatePassword(input: String) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             userPassword = input
         }
     }
@@ -35,7 +33,7 @@ class UserViewModel @Inject constructor(private val apiRepository: ApiRepository
     fun getUser() {
         viewModelScope.launch(Dispatchers.IO) {
             safelyCall {
-                authenticatedUser = apiRepository.getUser(
+                currentUser = apiRepository.getUser(
                     listOf(userEmail, userPassword)
                 )
             }
@@ -45,7 +43,7 @@ class UserViewModel @Inject constructor(private val apiRepository: ApiRepository
     fun updateBookieBoardScore(newScore: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             safelyCall {
-                authenticatedUser = apiRepository.updateUserScore(newScore)
+                currentUser = apiRepository.updateUserScore(newScore)
             }
         }
     }

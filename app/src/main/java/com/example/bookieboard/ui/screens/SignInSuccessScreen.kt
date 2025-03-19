@@ -37,7 +37,7 @@ fun SignInSuccessScreen(
                 .padding(24.dp)
         ) {
             Text(
-                text = "Welcome, ${userViewModel.authenticatedUser.firstName}!",
+                text = "Welcome, ${userViewModel.currentUser.firstName}!",
                 style = MaterialTheme.typography.headlineLarge
             )
 
