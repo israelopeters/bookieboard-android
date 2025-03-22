@@ -12,6 +12,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -30,14 +31,15 @@ fun BookieBoardAppTopBar(
     navigateUp: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    CenterAlignedTopAppBar(
+    TopAppBar(
         title = {
             Text(
                 text = stringResource(currentScreen.title),
                 style = MaterialTheme.typography.titleLarge
             )
         },
-        navigationIcon = {
+        // Remove back icon button
+        /*navigationIcon = {
             if (canNavigate) {
                 IconButton(onClick = navigateUp) {
                     Icon(
@@ -46,7 +48,7 @@ fun BookieBoardAppTopBar(
                     )
                 }
             }
-        },
+        },*/
         colors = topAppBarColors(
             containerColor = MaterialTheme.colorScheme.surface,
             titleContentColor = MaterialTheme.colorScheme.onSurface
