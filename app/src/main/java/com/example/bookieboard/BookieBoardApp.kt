@@ -25,6 +25,7 @@ import com.example.bookieboard.ui.screens.HomeScreen
 import com.example.bookieboard.ui.screens.QuestionScreen
 import com.example.bookieboard.ui.screens.SignInSuccessScreen
 import com.example.bookieboard.ui.screens.SignUpScreen
+import com.example.bookieboard.ui.screens.SignUpSuccessScreen
 import com.example.bookieboard.ui.screens.WelcomeScreen
 import kotlinx.coroutines.launch
 
@@ -33,6 +34,7 @@ enum class AppScreen(@StringRes val title: Int) {
     Welcome(title = R.string.welcome),
     SignUp(title = R.string.sign_up),
     SignInSuccess(title = R.string.sign_in_success),
+    SignUpSuccess(title = R.string.sign_up_success),
     Home(title = R.string.home),
     Question(title = R.string.question),
     BookieBoard(title = R.string.bookieboard)
@@ -57,7 +59,9 @@ fun BookieBoardApp(
         topBar = {
             val noTopBarScreens = listOf(
                 AppScreen.Welcome.name,
-                AppScreen.SignInSuccess.name
+                AppScreen.SignUp.name,
+                AppScreen.SignInSuccess.name,
+                AppScreen.SignUpSuccess.name
             )
             if (!noTopBarScreens.contains(currentScreen.name)) {
                 BookieBoardAppTopBar(
@@ -101,7 +105,7 @@ fun BookieBoardApp(
                             }
                         }
                     },
-                    onSignUpClicked = { navController.navigate(AppScreen.SignUp.name) }, // navigate to signup screen
+                    onSignUpClicked = { navController.navigate(AppScreen.SignUp.name) },
                     modifier = modifier.fillMaxSize()
                 )
             }
@@ -149,8 +153,13 @@ fun BookieBoardApp(
             composable(route = AppScreen.SignUp.name) {
                 SignUpScreen(
                     userViewModel,
-                    onCreateAccountClicked = { },
-                    onSignInClicked = {  }
+                    onCreateAccountClicked = { navController.navigate(AppScreen.SignUpSuccess.name) },
+                    onSignInClicked = { navController.navigate(AppScreen.Welcome.name) }
+                )
+            }
+            composable(route = AppScreen.SignUpSuccess.name) {
+                SignUpSuccessScreen(
+                    onSignInClicked = { navController.navigate(AppScreen.Welcome.name) }
                 )
             }
         }
