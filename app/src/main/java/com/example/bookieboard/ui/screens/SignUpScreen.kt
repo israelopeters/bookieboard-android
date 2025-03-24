@@ -11,6 +11,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -32,6 +33,7 @@ import io.ktor.client.HttpClient
 fun SignUpScreen(
     userViewModel: UserViewModel,
     onCreateAccountClicked: () -> Unit,
+    onSignInClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var firstName: String by rememberSaveable { mutableStateOf("") }
@@ -45,7 +47,9 @@ fun SignUpScreen(
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
-            modifier = modifier.fillMaxSize().padding(24.dp)
+            modifier = modifier
+                .fillMaxSize()
+                .padding(24.dp)
         ) {
             OutlinedTextField(
                 value = firstName,
@@ -88,6 +92,11 @@ fun SignUpScreen(
             ) {
                 Text(stringResource(R.string.create_account))
             }
+            TextButton (
+                onClick = onSignInClicked,
+            ) {
+                Text(stringResource(R.string.sign_in))
+            }
         }
     }
 }
@@ -107,7 +116,8 @@ fun SignUpScreenPreview() {
     BookieboardTheme {
         SignUpScreen(
             userViewModel = UserViewModel(ApiRepository(HttpClient())),
-            onCreateAccountClicked = { }
+            onCreateAccountClicked = { },
+            onSignInClicked = { }
         )
     }
 }

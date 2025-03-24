@@ -24,6 +24,7 @@ import com.example.bookieboard.ui.screens.BookieBoardScreen
 import com.example.bookieboard.ui.screens.HomeScreen
 import com.example.bookieboard.ui.screens.QuestionScreen
 import com.example.bookieboard.ui.screens.SignInSuccessScreen
+import com.example.bookieboard.ui.screens.SignUpScreen
 import com.example.bookieboard.ui.screens.WelcomeScreen
 import kotlinx.coroutines.launch
 
@@ -41,8 +42,8 @@ enum class AppScreen(@StringRes val title: Int) {
 fun BookieBoardApp(
     userViewModel: UserViewModel,
     questionViewModel: QuestionViewModel,
-    navController: NavHostController = rememberNavController(),
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navController: NavHostController = rememberNavController()
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentScreen = AppScreen.valueOf(
@@ -100,7 +101,7 @@ fun BookieBoardApp(
                             }
                         }
                     },
-                    onSignUpClicked = { }, // navigate to signup screen
+                    onSignUpClicked = { navController.navigate(AppScreen.SignUp.name) }, // navigate to signup screen
                     modifier = modifier.fillMaxSize()
                 )
             }
@@ -143,6 +144,13 @@ fun BookieBoardApp(
                         questionViewModel.resetCurrentPlayScore()
                         navController.navigate(AppScreen.Home.name)
                     }
+                )
+            }
+            composable(route = AppScreen.SignUp.name) {
+                SignUpScreen(
+                    userViewModel,
+                    onCreateAccountClicked = { },
+                    onSignInClicked = {  }
                 )
             }
         }
