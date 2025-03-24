@@ -14,4 +14,7 @@
     <string name="taking_it_easy">Taking It Easy</string>
     <string name="question">Question</string>
     <string name="sign_in_success">Sign In Success</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="create_account">Create Account</string>
 </resources>

@@ -25,8 +25,10 @@ import javax.inject.Inject
 class ApiRepository @Inject constructor(private val client: HttpClient) {
     private var userCredentials: List<String> = listOf("", "")
 
-    suspend fun addNewUser(user: UserCreation): User = client
-        .post("/api/v1/users/add").body()
+    suspend fun addNewUser(user: UserCreation): UserUiState {
+        val response = client.post("/api/v1/users/add")
+        return mapToUserUiState(response.processBody())
+    }
 
     suspend fun getUser(credentials: List<String>): UserUiState {
         val response = client.get(

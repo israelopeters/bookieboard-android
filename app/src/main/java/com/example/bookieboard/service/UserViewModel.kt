@@ -6,6 +6,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bookieboard.data.ApiRepository
+import com.example.bookieboard.model.User
+import com.example.bookieboard.model.UserCreation
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -46,6 +48,16 @@ class UserViewModel @Inject constructor(private val apiRepository: ApiRepository
                 currentUser = apiRepository.updateUserScore(newScore)
             }
         }
+    }
+
+    fun addNewUser(newUser: UserCreation): UserUiState {
+        var addedUser = UserUiState()
+        viewModelScope.launch(Dispatchers.IO) {
+            safelyCall {
+                addedUser = apiRepository.addNewUser(newUser)
+            }
+        }
+        return addedUser
     }
 
     suspend fun <T> safelyCall(execute: suspend () -> T): Result<T> = try {
