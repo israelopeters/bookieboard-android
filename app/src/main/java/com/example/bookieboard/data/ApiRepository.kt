@@ -80,7 +80,10 @@ class ApiRepository @Inject constructor(private val client: HttpClient) {
 
     // An extension function to handle the response body and exceptions when getting a user
     suspend inline fun <reified T> HttpResponse.processBody(): T {
-        if (this.status == HttpStatusCode.OK || this.status == HttpStatusCode.Accepted) {
+        if (
+            this.status == HttpStatusCode.OK ||
+            this.status == HttpStatusCode.Accepted ||
+            this.status == HttpStatusCode.Created) {
             // Accepted status code caters to updateUserScore server response success code
             return body<T>()
         } else if (this.status.value == 404) {

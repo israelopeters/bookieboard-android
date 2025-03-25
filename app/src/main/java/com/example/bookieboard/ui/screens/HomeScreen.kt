@@ -135,17 +135,8 @@ fun DifficultySelection(
                         .padding(horizontal = 16.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    // Only make EASY questions available for now
-                    var enabledState by remember { mutableStateOf(true) }
-                    if (selectedOption != "Let's take it easy") {
-                        enabledState = false
-                    } else {
-                        enabledState = true
-                    }
-
                     RadioButton(
                         selected = (text == selectedOption),
-                        enabled = enabledState,
                         onClick = null // null recommended for accessibility with screen readers
                     )
                     Text(
