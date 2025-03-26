@@ -116,7 +116,6 @@ fun AppSignIn(
             onValueChange = { userViewModel.updateEmail(it) },
             label = { Text(stringResource(R.string.email)) },
             modifier = Modifier
-                .fillMaxWidth()
                 .padding(8.dp)
         )
         OutlinedTextField(
@@ -125,13 +124,11 @@ fun AppSignIn(
             label = { Text(stringResource(R.string.password)) },
             visualTransformation = PasswordVisualTransformation(),
             modifier = Modifier
-                .fillMaxWidth()
                 .padding(8.dp)
         )
         Button(
             onClick = onLoginClicked,
             modifier = Modifier
-                .fillMaxWidth()
                 .padding(8.dp)
         ) {
             Text(stringResource(R.string.sign_in))

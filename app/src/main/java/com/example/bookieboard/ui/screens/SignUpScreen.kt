@@ -2,6 +2,7 @@ package com.example.bookieboard.ui.screens
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -50,7 +51,7 @@ fun SignUpScreen(
     var lastName: String by rememberSaveable { mutableStateOf("") }
     var email: String by rememberSaveable { mutableStateOf("") }
     var password: String by rememberSaveable { mutableStateOf("") }
-    var signUpStatus: Boolean by rememberSaveable { mutableStateOf(false) }
+    var addedUser: UserUiState by remember { mutableStateOf(UserUiState()) }
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -65,7 +66,7 @@ fun SignUpScreen(
                 .padding(24.dp)
         ) {
             Text(
-                text = stringResource(R.string.create_account),
+                text = stringResource(R.string.create_your_account),
                 style = MaterialTheme.typography.headlineLarge,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onBackground,
@@ -82,7 +83,6 @@ fun SignUpScreen(
                 onValueChange = { firstName = it },
                 label = { Text(stringResource(R.string.first_name)) },
                 modifier = Modifier
-                    .fillMaxWidth()
                     .padding(8.dp)
             )
             OutlinedTextField(
@@ -90,7 +90,6 @@ fun SignUpScreen(
                 onValueChange = { lastName = it },
                 label = { Text(stringResource(R.string.last_name)) },
                 modifier = Modifier
-                    .fillMaxWidth()
                     .padding(8.dp)
             )
             OutlinedTextField(
@@ -98,7 +97,6 @@ fun SignUpScreen(
                 onValueChange = { email = it },
                 label = { Text(stringResource(R.string.email)) },
                 modifier = Modifier
-                    .fillMaxWidth()
                     .padding(8.dp)
             )
             OutlinedTextField(
@@ -107,12 +105,14 @@ fun SignUpScreen(
                 label = { Text(stringResource(R.string.password)) },
                 visualTransformation = PasswordVisualTransformation(),
                 modifier = Modifier
-                    .fillMaxWidth()
                     .padding(8.dp)
             )
             Button(
                 onClick = {
-                    var addedUser = UserUiState()
+                    Log.v(
+                        "BookieBoard Activity",
+                        "Added user before network connection --- $addedUser"
+                    )
                     addedUser = userViewModel.addNewUser(
                         UserCreation(
                             firstName = firstName,
@@ -121,9 +121,17 @@ fun SignUpScreen(
                             password = password
                         )
                     )
+                    Log.v(
+                        "BookieBoard Activity",
+                        "Added user after network connection --- $addedUser"
+                    )
                     if (addedUser.firstName.isNotEmpty()) {
                         onCreateAccountClicked()
                     } else {
+                        Log.v(
+                            "BookieBoard Activity",
+                            "Failed to add user!"
+                        )
                         scope.launch {
                             snackbarHostState.showSnackbar(
                                 "Signup error. Try again."
@@ -132,7 +140,6 @@ fun SignUpScreen(
                     }
                 },
                 modifier = Modifier
-                    .fillMaxWidth()
                     .padding(8.dp)
             ) {
                 Text(stringResource(R.string.create_account))

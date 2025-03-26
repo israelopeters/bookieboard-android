@@ -26,8 +26,19 @@ class ApiRepository @Inject constructor(private val client: HttpClient) {
     private var userCredentials: List<String> = listOf("", "")
 
     suspend fun addNewUser(user: UserCreation): UserUiState {
-        val response = client.post("/api/v1/users/add")
-        return mapToUserUiState(response.processBody())
+        val response: User = client.post("/api/v1/users/add") {
+            contentType(ContentType.Application.Json)
+            setBody(user)
+        }.processBody()
+        Log.v(
+            "BookieBoard Activity",
+            "Api Repository raw response --- $response"
+        )
+        Log.v(
+            "BookieBoard Activity",
+            "Api Repository mapped response --- ${mapToUserUiState(response)}"
+        )
+        return mapToUserUiState(response)
     }
 
     suspend fun getUser(credentials: List<String>): UserUiState {
