@@ -34,7 +34,6 @@ import androidx.compose.ui.unit.dp
 import com.example.bookieboard.R
 import com.example.bookieboard.data.ApiRepository
 import com.example.bookieboard.model.UserCreation
-import com.example.bookieboard.service.UserUiState
 import com.example.bookieboard.service.UserViewModel
 import com.example.bookieboard.ui.theme.BookieboardTheme
 import io.ktor.client.HttpClient

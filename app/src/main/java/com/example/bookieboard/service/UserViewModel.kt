@@ -10,6 +10,8 @@ import com.example.bookieboard.model.User
 import com.example.bookieboard.model.UserCreation
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -18,7 +20,10 @@ class UserViewModel @Inject constructor(private val apiRepository: ApiRepository
 
     var userEmail by mutableStateOf("")
     var userPassword by mutableStateOf("")
-    var currentUser by mutableStateOf(UserUiState())
+
+
+    private val _userUiState = MutableStateFlow<UserUiState<User?>>(UserUiState.Loading)
+    val userUiState: StateFlow<UserUiState<User?>> = _userUiState
 
     fun updateEmail(input: String) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -34,35 +39,42 @@ class UserViewModel @Inject constructor(private val apiRepository: ApiRepository
 
     fun getUser() {
         viewModelScope.launch(Dispatchers.IO) {
-            safelyCall {
-                currentUser = apiRepository.getUser(
+            try {
+                val response = apiRepository.getUser(
                     listOf(userEmail, userPassword)
                 )
+                _userUiState.value = UserUiState.Success(response)
+            } catch (e: Exception) {
+                _userUiState.value = UserUiState.Error(e.message ?: "Network request error!")
             }
         }
     }
 
     fun updateBookieBoardScore(newScore: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            safelyCall {
-                currentUser = apiRepository.updateUserScore(newScore)
+            try {
+                val response = apiRepository.updateUserScore(newScore)
+                _userUiState.value = UserUiState.Success(response)
+            } catch (e: Exception) {
+                _userUiState.value = UserUiState.Error(e.message ?: "Network request error!")
             }
         }
     }
 
-    fun addNewUser(newUser: UserCreation): UserUiState {
-        var addedUser = UserUiState()
+    fun addNewUser(newUser: UserCreation) {
         viewModelScope.launch(Dispatchers.IO) {
-            safelyCall {
-                addedUser = apiRepository.addNewUser(newUser)
+            try {
+                val response = apiRepository.addNewUser(newUser)
+                _userUiState.value = UserUiState.Success(response)
+            } catch (e: Exception) {
+                _userUiState.value = UserUiState.Error(e.message ?: "Network request error!")
             }
         }
-        return addedUser
     }
 
-    suspend fun <T> safelyCall(execute: suspend () -> T): Result<T> = try {
-        Result.success(execute())
-    } catch (e: Exception) {
-        Result.failure(Throwable(message = e.message ?: "Network request error!"))
-    }
+//    suspend fun <T> safelyCall(execute: suspend () -> T): Result<T> = try {
+//        Result.success(execute())
+//    } catch (e: Exception) {
+//        Result.failure(Throwable(message = e.message ?: "Network request error!"))
+//    }
 }
