@@ -1,13 +1,11 @@
 package com.example.bookieboard.data
 
 import android.util.Log
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import com.example.bookieboard.model.DifficultyLevel
 import com.example.bookieboard.model.Question
 import com.example.bookieboard.model.User
 import com.example.bookieboard.model.UserCreation
+import com.example.bookieboard.service.UserUiState
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.basicAuth
@@ -24,7 +22,7 @@ import javax.inject.Inject
 class ApiRepository @Inject constructor(private val client: HttpClient) {
     private var userCredentials: List<String> = listOf("", "")
 
-    suspend fun addNewUser(user: UserCreation): User {
+    suspend fun addNewUser(user: UserCreation): UserUiState {
         val response: User = client.post("/api/v1/users/add") {
             contentType(ContentType.Application.Json)
             setBody(user)
@@ -35,12 +33,12 @@ class ApiRepository @Inject constructor(private val client: HttpClient) {
         )
         Log.v(
             "BookieBoard Activity",
-            "Api Repository mapped response --- ${response}"
+            "Api Repository mapped response --- ${mapToUserUiState(response)}"
         )
-        return response
+        return mapToUserUiState(response)
     }
 
-    suspend fun getUser(credentials: List<String>): User? {
+    suspend fun getUser(credentials: List<String>): UserUiState {
         val response = client.get(
             "/api/v1/users/email?email=${credentials[0]}"
         ) {
@@ -49,10 +47,13 @@ class ApiRepository @Inject constructor(private val client: HttpClient) {
                 password = credentials[1]
             )
         }
+        var currentUser = UserUiState()
         if (response.status == HttpStatusCode.OK) {
             userCredentials = credentials
+            currentUser = mapToUserUiState(response.processBody())
+            currentUser.isLoggedIn = true
         }
-        return response.processBody()
+        return currentUser
     }
 
     suspend fun getQuestions(difficultyLevel: DifficultyLevel): List<Question> {
@@ -67,7 +68,7 @@ class ApiRepository @Inject constructor(private val client: HttpClient) {
         return response.processBody()
     }
 
-    suspend fun updateUserScore(newScore: Int): User {
+    suspend fun updateUserScore(newScore: Int): UserUiState {
         val updates: HashMap<String, Any> = HashMap()
         updates["email"] = userCredentials[0]
         updates["bookieScore"] = newScore
@@ -82,7 +83,7 @@ class ApiRepository @Inject constructor(private val client: HttpClient) {
             )
         }
         Log.v("BookieBoardActivity", "Server response: ${response.body<User>()}")
-        return response.processBody()
+        return mapToUserUiState(response.processBody())
     }
 
     // An extension function to handle the response body and exceptions when getting a user
@@ -101,4 +102,14 @@ class ApiRepository @Inject constructor(private val client: HttpClient) {
             throw Exception("Something went wrong")
         }
     }
+
+    fun mapToUserUiState(user: User): UserUiState {
+        val userUiState: UserUiState = UserUiState()
+        userUiState.firstName = user.firstName
+        userUiState.lastName = user.lastName
+        userUiState.bookieRank = user.bookieRank
+        userUiState.bookieScore = user.bookieScore
+        return userUiState
+    }
+
 }
