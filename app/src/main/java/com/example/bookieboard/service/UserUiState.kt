@@ -2,7 +2,7 @@ package com.example.bookieboard.service
 
 import com.example.bookieboard.model.User
 
-data class UserUiStateState(
+data class UserUiState(
     val email: String? = null,
     val password: String? = null,
     val firstName: String? = null,
