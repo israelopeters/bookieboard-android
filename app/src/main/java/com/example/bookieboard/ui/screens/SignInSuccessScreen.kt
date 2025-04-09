@@ -13,21 +13,25 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.bookieboard.data.ApiRepository
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.bookieboard.service.UserViewModel
 import com.example.bookieboard.ui.theme.BookieboardTheme
-import io.ktor.client.HttpClient
 
 @Composable
 fun SignInSuccessScreen(
-    userViewModel: UserViewModel,
     onContinueClicked: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    userViewModel: UserViewModel = hiltViewModel()
 ) {
+    // Load signed-in user
+    userViewModel.getUser()
+    val currentUser = userViewModel.currentUser
+
     Surface(modifier = modifier) {
         Column(
             verticalArrangement = Arrangement.Center,
@@ -37,7 +41,7 @@ fun SignInSuccessScreen(
                 .padding(24.dp)
         ) {
             Text(
-                text = "Welcome, ${userViewModel.currentUser.firstName}!",
+                text = "Welcome, ${currentUser.firstName}!",
                 style = MaterialTheme.typography.headlineLarge
             )
 
@@ -71,7 +75,6 @@ fun SignInSuccessScreen(
 fun SignInSuccessScreenPreview() {
     BookieboardTheme {
         SignInSuccessScreen(
-            UserViewModel(ApiRepository((HttpClient()))),
             onContinueClicked = { }
         )
     }

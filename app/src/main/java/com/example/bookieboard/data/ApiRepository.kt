@@ -5,6 +5,7 @@ import com.example.bookieboard.model.DifficultyLevel
 import com.example.bookieboard.model.Question
 import com.example.bookieboard.model.User
 import com.example.bookieboard.model.UserCreation
+import com.example.bookieboard.service.AuthMode
 import com.example.bookieboard.service.UserUiState
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -51,7 +52,7 @@ class ApiRepository @Inject constructor(private val client: HttpClient) {
         if (response.status == HttpStatusCode.OK) {
             userCredentials = credentials
             currentUser = mapToUserUiState(response.processBody())
-            currentUser.isLoggedIn = true
+            currentUser = currentUser.copy(authMode = AuthMode.SIGNED_IN)
         }
         return currentUser
     }
@@ -104,11 +105,13 @@ class ApiRepository @Inject constructor(private val client: HttpClient) {
     }
 
     fun mapToUserUiState(user: User): UserUiState {
-        val userUiState: UserUiState = UserUiState()
-        userUiState.firstName = user.firstName
-        userUiState.lastName = user.lastName
-        userUiState.bookieRank = user.bookieRank
-        userUiState.bookieScore = user.bookieScore
+        val userUiState: UserUiState = UserUiState(
+            email = user.email,
+            firstName = user.firstName,
+            lastName = user.lastName,
+            bookieRank = user.bookieRank,
+            bookieScore = user.bookieScore
+        )
         return userUiState
     }
 

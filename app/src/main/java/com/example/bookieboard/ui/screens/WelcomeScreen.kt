@@ -2,6 +2,7 @@ package com.example.bookieboard.ui.screens
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
@@ -9,7 +10,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.paddingFromBaseline
 import androidx.compose.foundation.layout.size
@@ -19,6 +19,9 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -28,18 +31,23 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.bookieboard.R
 import com.example.bookieboard.data.ApiRepository
+import com.example.bookieboard.service.AuthMode
 import com.example.bookieboard.service.UserViewModel
+import com.example.bookieboard.ui.components.IndeterminateCircularIndicator
 import com.example.bookieboard.ui.theme.BookieboardTheme
 import io.ktor.client.HttpClient
 
+private val TAG: String = "BookieBoardActivity"
+
 @Composable
 fun WelcomeScreen(
-    userViewModel: UserViewModel,
-    onLoginClicked: () -> Unit,
+    onSignInClicked: () -> Unit,
     onSignUpClicked: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    userViewModel: UserViewModel = hiltViewModel()
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -48,12 +56,27 @@ fun WelcomeScreen(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
+
         AppDetails()
 
-        AppSignIn(
-            userViewModel,
-            onLoginClicked = onLoginClicked
-        )
+        when (userViewModel.currentUser.authMode) {
+            AuthMode.SIGNING_IN -> IndeterminateCircularIndicator()
+            AuthMode.SIGNED_OUT -> AppSignIn(
+                userViewModel,
+                onSignInClicked = {
+                    Log.v(
+                        TAG, "Welcome Screen - Before logging in: ${userViewModel.currentUser}"
+                    )
+                    Log.v(
+                        TAG, "Welcome Screen - Before logging in: ${userViewModel.userEmail}"
+                    )
+                    userViewModel.getUser()
+                    Log.v(TAG, "Welcome Screen - After logging in: ${userViewModel.currentUser}")
+                    onSignInClicked()
+                }
+            )
+            AuthMode.SIGNED_IN -> {} //Do nothing
+        }
 
         AppSignUp(onSignUpClicked = onSignUpClicked)
     }
@@ -103,7 +126,7 @@ fun AppDetails(
 @Composable
 fun AppSignIn(
     userViewModel: UserViewModel,
-    onLoginClicked: () -> Unit,
+    onSignInClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -127,7 +150,7 @@ fun AppSignIn(
                 .padding(8.dp)
         )
         Button(
-            onClick = onLoginClicked,
+            onClick = onSignInClicked,
             modifier = Modifier
                 .padding(8.dp)
         ) {
@@ -176,8 +199,7 @@ fun AppSignUp(
 fun WelcomeScreenPreview() {
     BookieboardTheme {
         WelcomeScreen(
-            UserViewModel(ApiRepository(HttpClient())),
-            onLoginClicked = { },
+            onSignInClicked = { },
             onSignUpClicked = { }
         )
     }
@@ -215,7 +237,7 @@ fun AppLoginPreview() {
     BookieboardTheme {
         AppSignIn(
             UserViewModel(ApiRepository(HttpClient())),
-            onLoginClicked = { }
+            onSignInClicked = { }
         )
     }
 }

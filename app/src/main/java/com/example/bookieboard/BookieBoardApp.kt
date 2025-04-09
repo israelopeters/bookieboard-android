@@ -81,45 +81,31 @@ fun BookieBoardApp(
         ) {
             composable(route = AppScreen.Welcome.name) {
                 WelcomeScreen(
-                    userViewModel = userViewModel,
-                    onLoginClicked = {
-                        Log.v("BookieBoardActivity",
-                            "Before logging in: ${userViewModel.currentUser}"
-                        )
-                        Log.v("BookieBoardActivity",
-                            "Before logging in: ${userViewModel.userEmail}"
-                        )
-                        userViewModel.getUser()
-                        Log.v("BookieBoardActivity", "After logging in: ${userViewModel.currentUser}")
-                        Log.v("BookieBoardActivity",
-                            "Before logging in: ${userViewModel.userEmail}"
-                        )
-                        if (userViewModel.currentUser.isLoggedIn) {
-                            navController.navigate(AppScreen.SignInSuccess.name)
-                        } else {
-                            Log.v("BookieBoardActivity", "At login failure: ${userViewModel.currentUser}")
-                            scope.launch {
-                                snackbarHostState.showSnackbar(
-                                    "Login error. Enter correct credentials."
-                                )
-                            }
-                        }
-                    },
+//                    onSignInClicked = {
+//                        if (userViewModel.currentUser.) {
+//                            navController.navigate(AppScreen.SignInSuccess.name)
+//                        } else {
+//                            Log.v("BookieBoardActivity", "At login failure: ${userViewModel.currentUser}")
+//                            scope.launch {
+//                                snackbarHostState.showSnackbar(
+//                                    "Login error. Enter correct credentials."
+//                                )
+//                            }
+//                        }
+//                    },
+                    onSignInClicked = { navController.navigate(AppScreen.SignInSuccess.name) },
                     onSignUpClicked = { navController.navigate(AppScreen.SignUp.name) },
                     modifier = modifier.fillMaxSize()
                 )
             }
             composable(route = AppScreen.Home.name) {
                 HomeScreen(
-                    userViewModel,
-                    questionViewModel,
                     onPlayClicked = {
                         navController.navigate(AppScreen.Question.name)
                     })
             }
             composable(route = AppScreen.SignInSuccess.name) {
                 SignInSuccessScreen(
-                    userViewModel,
                     onContinueClicked = {
                         navController.navigate(AppScreen.Home.name)
                     }
@@ -141,8 +127,6 @@ fun BookieBoardApp(
             }
             composable(route = AppScreen.BookieBoard.name) {
                 BookieBoardScreen(
-                    userViewModel,
-                    questionViewModel,
                     onViewBookieBoardClicked = { },
                     onHomeClicked =  {
                         questionViewModel.resetCurrentPlayScore()
@@ -152,7 +136,6 @@ fun BookieBoardApp(
             }
             composable(route = AppScreen.SignUp.name) {
                 SignUpScreen(
-                    userViewModel,
                     onCreateAccountClicked = { navController.navigate(AppScreen.SignUpSuccess.name) },
                     onSignInClicked = { navController.navigate(AppScreen.Welcome.name) }
                 )

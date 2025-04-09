@@ -19,10 +19,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -30,21 +28,22 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.bookieboard.R
-import com.example.bookieboard.data.ApiRepository
 import com.example.bookieboard.model.DifficultyLevel
 import com.example.bookieboard.service.QuestionViewModel
+import com.example.bookieboard.service.UserUiState
 import com.example.bookieboard.service.UserViewModel
 import com.example.bookieboard.ui.theme.BookieboardTheme
-import io.ktor.client.HttpClient
 
 @Composable
 fun HomeScreen(
-    userViewModel: UserViewModel,
-    questionViewModel: QuestionViewModel,
     onPlayClicked: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    userViewModel: UserViewModel = hiltViewModel(),
+    questionViewModel: QuestionViewModel = hiltViewModel()
 ) {
+    val currentUser = userViewModel.currentUser
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -52,7 +51,7 @@ fun HomeScreen(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        StatusSection(userViewModel)
+        StatusSection(currentUser)
 
         HorizontalDivider(
             modifier = Modifier.padding(32.dp)
@@ -64,7 +63,7 @@ fun HomeScreen(
 
 @Composable
 fun StatusSection(
-    userViewModel: UserViewModel,
+    currentUser: UserUiState,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -73,7 +72,7 @@ fun StatusSection(
         modifier = modifier
     ){
         Text(
-            text = "Hi ${userViewModel.currentUser.firstName}! " +
+            text = "Hi ${currentUser.firstName}! " +
                     "This is your",
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Normal,
@@ -91,7 +90,7 @@ fun StatusSection(
             )
         )
         Text(
-            text = "Your current rank: ${userViewModel.currentUser.bookieRank}",
+            text = "Your current rank: ${currentUser.bookieRank}",
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Normal,
             color = MaterialTheme.colorScheme.onBackground,
@@ -184,8 +183,6 @@ fun DifficultySelection(
 fun HomeScreenPreview() {
     BookieboardTheme {
         HomeScreen(
-            UserViewModel(ApiRepository(HttpClient())),
-            QuestionViewModel(ApiRepository(HttpClient())),
             onPlayClicked = { }
         )
     }

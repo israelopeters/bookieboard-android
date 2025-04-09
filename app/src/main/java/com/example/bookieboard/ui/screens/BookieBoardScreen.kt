@@ -22,20 +22,20 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.bookieboard.R
-import com.example.bookieboard.data.ApiRepository
 import com.example.bookieboard.service.QuestionViewModel
+import com.example.bookieboard.service.UserUiState
 import com.example.bookieboard.service.UserViewModel
 import com.example.bookieboard.ui.theme.BookieboardTheme
-import io.ktor.client.HttpClient
 
 @Composable
 fun BookieBoardScreen(
-    userViewModel: UserViewModel,
-    questionViewModel: QuestionViewModel,
     onViewBookieBoardClicked: () -> Unit,
     onHomeClicked: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    userViewModel: UserViewModel = hiltViewModel(),
+    questionViewModel: QuestionViewModel = hiltViewModel()
 ) {
     Column(
         verticalArrangement = Arrangement.Center,
@@ -44,7 +44,9 @@ fun BookieBoardScreen(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        ScoreStatus(userViewModel, questionViewModel)
+        val currentUser = userViewModel.currentUser
+
+        ScoreStatus(currentUser, questionViewModel)
 
         Spacer(Modifier.height(8.dp))
 
@@ -63,12 +65,11 @@ fun BookieBoardScreen(
             Text(stringResource(R.string.home))
         }
     }
-
 }
 
 @Composable
 fun ScoreStatus(
-    userViewModel: UserViewModel,
+    currentUser: UserUiState,
     questionViewModel: QuestionViewModel,
     modifier: Modifier = Modifier
 ) {
@@ -94,8 +95,8 @@ fun ScoreStatus(
             modifier = Modifier.padding(24.dp)
         ) {
             Text(
-                text = "Player: ${userViewModel.currentUser.firstName} " +
-                        " ${userViewModel.currentUser.lastName}",
+                text = "Player: ${currentUser.firstName} " +
+                        " ${currentUser.lastName}",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Normal,
                 color = MaterialTheme.colorScheme.onBackground,
@@ -109,14 +110,14 @@ fun ScoreStatus(
                 modifier = Modifier.padding(8.dp)
             )
             Text(
-                text = "All-time score: ${userViewModel.currentUser.bookieScore}",
+                text = "All-time score: ${currentUser.bookieScore}",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Normal,
                 color = MaterialTheme.colorScheme.onBackground,
                 modifier = Modifier.padding(8.dp)
             )
             Text(
-                text = "Rank: ${userViewModel.currentUser.bookieRank}",
+                text = "Rank: ${currentUser.bookieRank}",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Normal,
                 color = MaterialTheme.colorScheme.onBackground,
@@ -140,8 +141,6 @@ fun ScoreStatus(
 fun BookieBoardScreenPreview() {
     BookieboardTheme {
         BookieBoardScreen(
-            UserViewModel(ApiRepository(HttpClient())),
-            QuestionViewModel(ApiRepository(HttpClient())),
             { },
             { }
         )

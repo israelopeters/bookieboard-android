@@ -1,5 +1,7 @@
 package com.example.bookieboard.service
 
+import android.util.Log
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -17,7 +19,9 @@ class UserViewModel @Inject constructor(private val apiRepository: ApiRepository
 
     var userEmail by mutableStateOf("")
     var userPassword by mutableStateOf("")
-    var currentUser = UserUiState()
+    var currentUser by mutableStateOf(UserUiState())
+
+    private val TAG: String = "BookieBoardActivity"
 
     fun updateEmail(input: String) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -33,11 +37,13 @@ class UserViewModel @Inject constructor(private val apiRepository: ApiRepository
 
     fun getUser() {
         viewModelScope.launch(Dispatchers.IO) {
+            currentUser = currentUser.copy(authMode = AuthMode.SIGNING_IN)
             safelyCall {
                 currentUser = apiRepository.getUser(
                     listOf(userEmail, userPassword)
                 )
             }
+            Log.v(TAG, "ViewModel - After logging in: $currentUser")
         }
     }
 

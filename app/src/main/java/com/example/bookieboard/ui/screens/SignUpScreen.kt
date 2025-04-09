@@ -6,7 +6,6 @@ import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.paddingFromBaseline
 import androidx.compose.material3.Button
@@ -31,9 +30,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.bookieboard.R
 import com.example.bookieboard.data.ApiRepository
 import com.example.bookieboard.model.UserCreation
+import com.example.bookieboard.service.UserUiState
 import com.example.bookieboard.service.UserViewModel
 import com.example.bookieboard.ui.theme.BookieboardTheme
 import io.ktor.client.HttpClient
@@ -41,10 +42,10 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun SignUpScreen(
-    userViewModel: UserViewModel,
     onCreateAccountClicked: () -> Unit,
     onSignInClicked: () -> Unit,
     modifier: Modifier = Modifier,
+    userViewModel: UserViewModel = hiltViewModel()
 ) {
     var firstName: String by rememberSaveable { mutableStateOf("") }
     var lastName: String by rememberSaveable { mutableStateOf("") }
@@ -124,7 +125,7 @@ fun SignUpScreen(
                         "BookieBoard Activity",
                         "Added user after network connection --- $addedUser"
                     )
-                    if (addedUser.firstName.isNotEmpty()) {
+                    if (addedUser.firstName != null) {
                         onCreateAccountClicked()
                     } else {
                         Log.v(

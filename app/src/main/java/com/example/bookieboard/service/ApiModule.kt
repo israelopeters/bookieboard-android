@@ -20,7 +20,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object ApiModule {
 
-    val BASE_URL = "http://bookieboardapi-env.eba-2imwjb2j.eu-west-2.elasticbeanstalk.com"
+    private const val BASE_URL = "http://bookieboardapi-env.eba-2imwjb2j.eu-west-2.elasticbeanstalk.com"
 
     @Provides
     @Singleton
