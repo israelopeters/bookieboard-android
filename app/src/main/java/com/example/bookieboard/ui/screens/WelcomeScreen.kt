@@ -9,19 +9,20 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.paddingFromBaseline
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,50 +36,60 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.bookieboard.R
 import com.example.bookieboard.data.ApiRepository
 import com.example.bookieboard.service.AuthMode
+import com.example.bookieboard.service.UserUiState
 import com.example.bookieboard.service.UserViewModel
 import com.example.bookieboard.ui.components.IndeterminateCircularIndicator
 import com.example.bookieboard.ui.theme.BookieboardTheme
 import io.ktor.client.HttpClient
 
-private val TAG: String = "BookieBoardActivity"
+private const val TAG: String = "BookieBoardActivity"
 
 @Composable
 fun WelcomeScreen(
-    onSignInClicked: () -> Unit,
+    onContinueClicked: () -> Unit,
     onSignUpClicked: () -> Unit,
     modifier: Modifier = Modifier,
     userViewModel: UserViewModel = hiltViewModel()
 ) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-        modifier = modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-    ) {
+    when (userViewModel.currentUser.authMode) {
 
-        AppDetails()
+        AuthMode.SIGNING_IN -> IndeterminateCircularIndicator()
 
-        when (userViewModel.currentUser.authMode) {
-            AuthMode.SIGNING_IN -> IndeterminateCircularIndicator()
-            AuthMode.SIGNED_OUT -> AppSignIn(
-                userViewModel,
-                onSignInClicked = {
-                    Log.v(
-                        TAG, "Welcome Screen - Before logging in: ${userViewModel.currentUser}"
-                    )
-                    Log.v(
-                        TAG, "Welcome Screen - Before logging in: ${userViewModel.userEmail}"
-                    )
-                    userViewModel.getUser()
-                    Log.v(TAG, "Welcome Screen - After logging in: ${userViewModel.currentUser}")
-                    onSignInClicked()
-                }
-            )
-            AuthMode.SIGNED_IN -> {} //Do nothing
-        }
+        AuthMode.SIGNED_IN -> SignInSuccess(
+            userState = userViewModel.currentUser,
+            onContinueClicked = onContinueClicked
+        )
 
-        AppSignUp(onSignUpClicked = onSignUpClicked)
+        AuthMode.SIGNED_OUT ->
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+                modifier = modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.background)
+            ) {
+
+                AppDetails()
+
+                AppSignIn(
+                    userViewModel,
+                    onSignInClicked = {
+                        Log.v(
+                            TAG, "Welcome Screen - Before logging in: ${userViewModel.currentUser}"
+                        )
+                        Log.v(
+                            TAG, "Welcome Screen - Before logging in: ${userViewModel.userEmail}"
+                        )
+                        userViewModel.getUser()
+                        Log.v(
+                            TAG,
+                            "Welcome Screen - After logging in: ${userViewModel.currentUser}"
+                        )
+                    }
+                )
+
+                AppSignUp(onSignUpClicked = onSignUpClicked)
+            }
     }
 }
 
@@ -182,6 +193,41 @@ fun AppSignUp(
     }
 }
 
+@Composable
+fun SignInSuccess(
+    onContinueClicked: () -> Unit,
+    modifier: Modifier = Modifier,
+    userState: UserUiState
+) {
+    Surface(modifier = modifier) {
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(24.dp)
+        ) {
+            Text(
+                text = "Welcome, ${userState.firstName}!",
+                style = MaterialTheme.typography.headlineLarge
+            )
+
+            Spacer(Modifier.height(8.dp))
+
+            Text(
+                text = "Ready to prove your bibliophilic prowess?",
+                modifier = Modifier.padding(vertical = 8.dp)
+            )
+            OutlinedButton(
+                onClick = onContinueClicked,
+                modifier = Modifier.padding(8.dp)
+            ) {
+                Text("Continue")
+            }
+        }
+    }
+}
+
 // Previews
 @Preview(
     showBackground = true,
@@ -199,7 +245,7 @@ fun AppSignUp(
 fun WelcomeScreenPreview() {
     BookieboardTheme {
         WelcomeScreen(
-            onSignInClicked = { },
+            onContinueClicked = { },
             onSignUpClicked = { }
         )
     }
@@ -257,6 +303,26 @@ fun AppSignUpPreview() {
     BookieboardTheme {
         AppSignUp(
             onSignUpClicked = { }
+        )
+    }
+}
+
+@Preview(
+    showBackground = true,
+    uiMode = UI_MODE_NIGHT_NO,
+    name = "DefaultPreviewLight"
+)
+@Preview(
+    showBackground = true,
+    uiMode = UI_MODE_NIGHT_YES,
+    name = "DefaultPreviewDark"
+)
+@Composable
+fun SignInSuccessPreview() {
+    BookieboardTheme {
+        SignInSuccess(
+            onContinueClicked = { },
+            userState = UserUiState()
         )
     }
 }

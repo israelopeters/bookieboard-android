@@ -1,6 +1,5 @@
 package com.example.bookieboard
 
-import android.util.Log
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -23,17 +22,14 @@ import com.example.bookieboard.ui.components.BookieBoardAppTopBar
 import com.example.bookieboard.ui.screens.BookieBoardScreen
 import com.example.bookieboard.ui.screens.HomeScreen
 import com.example.bookieboard.ui.screens.QuestionScreen
-import com.example.bookieboard.ui.screens.SignInSuccessScreen
 import com.example.bookieboard.ui.screens.SignUpScreen
 import com.example.bookieboard.ui.screens.SignUpSuccessScreen
 import com.example.bookieboard.ui.screens.WelcomeScreen
-import kotlinx.coroutines.launch
 
 // Enums for app screens
 enum class AppScreen(@StringRes val title: Int) {
     Welcome(title = R.string.welcome),
     SignUp(title = R.string.sign_up),
-    SignInSuccess(title = R.string.sign_in_success),
     SignUpSuccess(title = R.string.sign_up_success),
     Home(title = R.string.home),
     Question(title = R.string.question),
@@ -60,7 +56,6 @@ fun BookieBoardApp(
             val noTopBarScreens = listOf(
                 AppScreen.Welcome.name,
                 AppScreen.SignUp.name,
-                AppScreen.SignInSuccess.name,
                 AppScreen.SignUpSuccess.name
             )
             if (!noTopBarScreens.contains(currentScreen.name)) {
@@ -93,7 +88,7 @@ fun BookieBoardApp(
 //                            }
 //                        }
 //                    },
-                    onSignInClicked = { navController.navigate(AppScreen.SignInSuccess.name) },
+                    onContinueClicked = { navController.navigate(AppScreen.Home.name) },
                     onSignUpClicked = { navController.navigate(AppScreen.SignUp.name) },
                     modifier = modifier.fillMaxSize()
                 )
@@ -103,13 +98,6 @@ fun BookieBoardApp(
                     onPlayClicked = {
                         navController.navigate(AppScreen.Question.name)
                     })
-            }
-            composable(route = AppScreen.SignInSuccess.name) {
-                SignInSuccessScreen(
-                    onContinueClicked = {
-                        navController.navigate(AppScreen.Home.name)
-                    }
-                )
             }
             composable(route = AppScreen.Question.name) {
                 QuestionScreen(
