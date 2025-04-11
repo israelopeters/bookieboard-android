@@ -1,6 +1,5 @@
 package com.example.bookieboard.service
 
-import com.example.bookieboard.model.User
 import com.example.bookieboard.model.UserRank
 
 data class UserUiState(
@@ -16,20 +15,10 @@ data class UserUiState(
 
 data class UserCreationState(
     val email: String? = null,
-    val password: String? = null,
-    val firstName: String? = null,
-    val lastName: String? = null,
     val signUpMode: SignUpMode = SignUpMode.INACTIVE,
     val isLoading: Boolean = false,
     val error: String? = null
-) {
-    fun isEntryValid(): Boolean {
-        return email?.isNotEmpty() == true &&
-                password?.isNotEmpty() == true &&
-                firstName?.isNotEmpty() == true &&
-                lastName?.isNotEmpty() == true
-    }
-}
+)
 
 enum class AuthMode{
     SIGNED_IN,
@@ -39,5 +28,6 @@ enum class AuthMode{
 
 enum class SignUpMode{
     ACTIVE,
+    PROGRESS,
     INACTIVE
 }

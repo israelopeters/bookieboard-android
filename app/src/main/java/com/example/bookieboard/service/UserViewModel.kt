@@ -1,6 +1,7 @@
 package com.example.bookieboard.service
 
 import android.util.Log
+import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -14,14 +15,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+private const val TAG: String = "BookieBoardActivity"
+
 @HiltViewModel
 class UserViewModel @Inject constructor(private val apiRepository: ApiRepository): ViewModel() {
 
     var userEmail by mutableStateOf("")
     var userPassword by mutableStateOf("")
     var currentUser by mutableStateOf(UserUiState())
-
-    private val TAG: String = "BookieBoardActivity"
+    var addedUser by mutableStateOf(UserCreationState())
 
     fun updateEmail(input: String) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -38,12 +40,20 @@ class UserViewModel @Inject constructor(private val apiRepository: ApiRepository
     fun getUser() {
         viewModelScope.launch(Dispatchers.IO) {
             currentUser = currentUser.copy(authMode = AuthMode.SIGNING_IN)
-            safelyCall {
-                currentUser = apiRepository.getUser(
-                    listOf(userEmail, userPassword)
+            try {
+                safelyCall {
+                    currentUser = apiRepository.getUser(
+                        listOf(userEmail, userPassword)
+                    )
+                }
+                Log.v(TAG, "ViewModel - After logging in: $currentUser")
+            } catch (e: Exception) {
+                currentUser = currentUser.copy(
+                    authMode = AuthMode.SIGNED_OUT,
+                    error = e.message
                 )
+                Log.v(TAG, "ViewModel - Error after logging in: $currentUser")
             }
-            Log.v(TAG, "ViewModel - After logging in: $currentUser")
         }
     }
 
@@ -55,14 +65,24 @@ class UserViewModel @Inject constructor(private val apiRepository: ApiRepository
         }
     }
 
-    fun addNewUser(newUser: UserCreation): UserUiState {
-        var addedUser = UserUiState()
+    fun addNewUser(newUser: UserCreation): UserCreationState {
         viewModelScope.launch(Dispatchers.IO) {
-            safelyCall {
-                addedUser = apiRepository.addNewUser(newUser)
+            addedUser = addedUser.copy(signUpMode = SignUpMode.PROGRESS)
+            try {
+                safelyCall {
+                    addedUser = apiRepository.addNewUser(newUser)
+                }
+            } catch (e: Exception) {
+                addedUser = addedUser.copy(error = e.message)
             }
         }
         return addedUser
+    }
+
+    fun clearAddedUser() {
+        viewModelScope.launch(Dispatchers.IO) {
+            addedUser = UserCreationState()
+        }
     }
 
     suspend fun <T> safelyCall(execute: suspend () -> T): Result<T> = try {

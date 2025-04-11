@@ -6,6 +6,8 @@ import com.example.bookieboard.model.Question
 import com.example.bookieboard.model.User
 import com.example.bookieboard.model.UserCreation
 import com.example.bookieboard.service.AuthMode
+import com.example.bookieboard.service.SignUpMode
+import com.example.bookieboard.service.UserCreationState
 import com.example.bookieboard.service.UserUiState
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -20,23 +22,23 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
 import javax.inject.Inject
 
+private const val TAG: String = "BookieBoardActivity"
+
 class ApiRepository @Inject constructor(private val client: HttpClient) {
     private var userCredentials: List<String> = listOf("", "")
 
-    suspend fun addNewUser(user: UserCreation): UserUiState {
-        val response: User = client.post("/api/v1/users/add") {
-            contentType(ContentType.Application.Json)
-            setBody(user)
-        }.processBody()
-        Log.v(
-            "BookieBoard Activity",
-            "Api Repository raw response --- $response"
-        )
-        Log.v(
-            "BookieBoard Activity",
-            "Api Repository mapped response --- ${mapToUserUiState(response)}"
-        )
-        return mapToUserUiState(response)
+    suspend fun addNewUser(user: UserCreation): UserCreationState {
+        try {
+            val response: User = client.post("/api/v1/users/add") {
+                contentType(ContentType.Application.Json)
+                setBody(user)
+            }.processBody()
+            Log.v(TAG, "API repository - raw response --- $response")
+            Log.v(TAG, "Api Repository - mapped response --- ${mapToUserCreationState(response)}")
+            return mapToUserCreationState(response)
+        } catch (e: Exception) {
+            return UserCreationState(error = e.message)
+        }
     }
 
     suspend fun getUser(credentials: List<String>): UserUiState {
@@ -104,7 +106,7 @@ class ApiRepository @Inject constructor(private val client: HttpClient) {
         }
     }
 
-    fun mapToUserUiState(user: User): UserUiState {
+    private fun mapToUserUiState(user: User): UserUiState {
         val userUiState: UserUiState = UserUiState(
             email = user.email,
             firstName = user.firstName,
@@ -113,6 +115,16 @@ class ApiRepository @Inject constructor(private val client: HttpClient) {
             bookieScore = user.bookieScore
         )
         return userUiState
+    }
+
+    private fun mapToUserCreationState(user: User): UserCreationState {
+        val userCreationState: UserCreationState = UserCreationState(
+            email = user.email,
+            signUpMode = SignUpMode.ACTIVE,
+            isLoading = false,
+            error = null
+        )
+        return userCreationState
     }
 
 }

@@ -4,12 +4,8 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -23,14 +19,12 @@ import com.example.bookieboard.ui.screens.BookieBoardScreen
 import com.example.bookieboard.ui.screens.HomeScreen
 import com.example.bookieboard.ui.screens.QuestionScreen
 import com.example.bookieboard.ui.screens.SignUpScreen
-import com.example.bookieboard.ui.screens.SignUpSuccessScreen
 import com.example.bookieboard.ui.screens.WelcomeScreen
 
 // Enums for app screens
 enum class AppScreen(@StringRes val title: Int) {
     Welcome(title = R.string.welcome),
     SignUp(title = R.string.sign_up),
-    SignUpSuccess(title = R.string.sign_up_success),
     Home(title = R.string.home),
     Question(title = R.string.question),
     BookieBoard(title = R.string.bookieboard)
@@ -47,16 +41,12 @@ fun BookieBoardApp(
     val currentScreen = AppScreen.valueOf(
         backStackEntry?.destination?.route ?: AppScreen.Welcome.name
     )
-    val scope = rememberCoroutineScope()
-    val snackbarHostState = remember { SnackbarHostState() }
 
     Scaffold(
-        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             val noTopBarScreens = listOf(
                 AppScreen.Welcome.name,
                 AppScreen.SignUp.name,
-                AppScreen.SignUpSuccess.name
             )
             if (!noTopBarScreens.contains(currentScreen.name)) {
                 BookieBoardAppTopBar(
@@ -76,18 +66,6 @@ fun BookieBoardApp(
         ) {
             composable(route = AppScreen.Welcome.name) {
                 WelcomeScreen(
-//                    onSignInClicked = {
-//                        if (userViewModel.currentUser.) {
-//                            navController.navigate(AppScreen.SignInSuccess.name)
-//                        } else {
-//                            Log.v("BookieBoardActivity", "At login failure: ${userViewModel.currentUser}")
-//                            scope.launch {
-//                                snackbarHostState.showSnackbar(
-//                                    "Login error. Enter correct credentials."
-//                                )
-//                            }
-//                        }
-//                    },
                     onContinueClicked = { navController.navigate(AppScreen.Home.name) },
                     onSignUpClicked = { navController.navigate(AppScreen.SignUp.name) },
                     modifier = modifier.fillMaxSize()
@@ -124,12 +102,6 @@ fun BookieBoardApp(
             }
             composable(route = AppScreen.SignUp.name) {
                 SignUpScreen(
-                    onCreateAccountClicked = { navController.navigate(AppScreen.SignUpSuccess.name) },
-                    onSignInClicked = { navController.navigate(AppScreen.Welcome.name) }
-                )
-            }
-            composable(route = AppScreen.SignUpSuccess.name) {
-                SignUpSuccessScreen(
                     onSignInClicked = { navController.navigate(AppScreen.Welcome.name) }
                 )
             }
