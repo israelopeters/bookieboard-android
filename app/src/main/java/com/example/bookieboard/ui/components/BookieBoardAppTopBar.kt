@@ -4,12 +4,7 @@ import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -20,7 +15,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.bookieboard.AppScreen
-import com.example.bookieboard.R
 import com.example.bookieboard.ui.theme.BookieboardTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -29,6 +23,7 @@ fun BookieBoardAppTopBar(
     currentScreen: AppScreen,
     canNavigate: Boolean,
     navigateUp: () -> Unit,
+    onSignOutClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     TopAppBar(
@@ -53,6 +48,7 @@ fun BookieBoardAppTopBar(
             containerColor = MaterialTheme.colorScheme.surface,
             titleContentColor = MaterialTheme.colorScheme.onSurface
         ),
+        actions = { DropdownMenuWithDetails(onSignOutClicked) },
         modifier = modifier.padding(8.dp).fillMaxWidth()
     )
 }
@@ -74,6 +70,7 @@ fun ReviewsAppTopBarPreview() {
             currentScreen = AppScreen.SignUp,
             canNavigate = true,
             navigateUp = { },
+            onSignOutClicked = { }
         )
     }
 }

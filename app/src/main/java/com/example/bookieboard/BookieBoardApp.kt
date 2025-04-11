@@ -53,7 +53,8 @@ fun BookieBoardApp(
                 BookieBoardAppTopBar(
                     currentScreen = currentScreen,
                     canNavigate = navController.previousBackStackEntry != null,
-                    navigateUp = { }
+                    navigateUp = { },
+                    onSignOutClicked = { }
                 )
             }
         },
