@@ -16,9 +16,6 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    private val userViewModel: UserViewModel by viewModels()
-    private val questionViewModel: QuestionViewModel by viewModels()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -27,7 +24,7 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    BookieBoardApp(userViewModel, questionViewModel)
+                    BookieBoardApp()
                 }
             }
         }

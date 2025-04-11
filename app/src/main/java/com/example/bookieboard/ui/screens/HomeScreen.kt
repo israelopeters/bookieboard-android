@@ -40,10 +40,9 @@ import com.example.bookieboard.ui.theme.BookieboardTheme
 fun HomeScreen(
     onPlayClicked: () -> Unit,
     modifier: Modifier = Modifier,
-    userViewModel: UserViewModel = hiltViewModel(),
-    questionViewModel: QuestionViewModel = hiltViewModel()
+    userViewModel: UserViewModel,
+    questionViewModel: QuestionViewModel
 ) {
-    val currentUser = userViewModel.currentUser
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -51,7 +50,7 @@ fun HomeScreen(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        StatusSection(currentUser)
+        StatusSection(userViewModel)
 
         HorizontalDivider(
             modifier = Modifier.padding(32.dp)
@@ -63,7 +62,7 @@ fun HomeScreen(
 
 @Composable
 fun StatusSection(
-    currentUser: UserUiState,
+    userViewModel: UserViewModel,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -72,7 +71,7 @@ fun StatusSection(
         modifier = modifier
     ){
         Text(
-            text = "Hi ${currentUser.firstName}! " +
+            text = "Hi ${userViewModel.currentUser.firstName}! " +
                     "This is your",
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Normal,
@@ -90,7 +89,7 @@ fun StatusSection(
             )
         )
         Text(
-            text = "Your current rank: ${currentUser.bookieRank}",
+            text = "Your current rank: ${userViewModel.currentUser.bookieRank}",
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Normal,
             color = MaterialTheme.colorScheme.onBackground,
@@ -183,6 +182,8 @@ fun DifficultySelection(
 fun HomeScreenPreview() {
     BookieboardTheme {
         HomeScreen(
+            userViewModel = hiltViewModel(),
+            questionViewModel = hiltViewModel(),
             onPlayClicked = { }
         )
     }

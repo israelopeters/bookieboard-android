@@ -44,7 +44,7 @@ private const val TAG: String = "BookieBoardActivity"
 fun SignUpScreen(
     onSignInClicked: () -> Unit,
     modifier: Modifier = Modifier,
-    userViewModel: UserViewModel = hiltViewModel()
+    userViewModel: UserViewModel
 ) {
 //    val scope = rememberCoroutineScope()
 //    val snackbarHostState = remember { SnackbarHostState() }
@@ -216,6 +216,7 @@ fun SignUpSuccessScreen(
 fun SignUpScreenPreview() {
     BookieboardTheme {
         SignUpScreen(
+            userViewModel = hiltViewModel(),
             onSignInClicked = { }
         )
     }

@@ -34,9 +34,12 @@ fun BookieBoardScreen(
     onViewBookieBoardClicked: () -> Unit,
     onHomeClicked: () -> Unit,
     modifier: Modifier = Modifier,
-    userViewModel: UserViewModel = hiltViewModel(),
-    questionViewModel: QuestionViewModel = hiltViewModel()
+    userViewModel: UserViewModel,
+    questionViewModel: QuestionViewModel
 ) {
+    userViewModel.getUser()
+    val currentUser = userViewModel.currentUser
+
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -44,8 +47,6 @@ fun BookieBoardScreen(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        val currentUser = userViewModel.currentUser
-
         ScoreStatus(currentUser, questionViewModel)
 
         Spacer(Modifier.height(8.dp))
@@ -96,7 +97,7 @@ fun ScoreStatus(
         ) {
             Text(
                 text = "Player: ${currentUser.firstName} " +
-                        " ${currentUser.lastName}",
+                        "${currentUser.lastName}",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Normal,
                 color = MaterialTheme.colorScheme.onBackground,
@@ -141,8 +142,10 @@ fun ScoreStatus(
 fun BookieBoardScreenPreview() {
     BookieboardTheme {
         BookieBoardScreen(
-            { },
-            { }
+            userViewModel = hiltViewModel(),
+            questionViewModel = hiltViewModel(),
+            onViewBookieBoardClicked = { },
+            onHomeClicked = { }
         )
     }
 }

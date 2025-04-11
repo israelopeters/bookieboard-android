@@ -7,6 +7,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -32,9 +33,9 @@ enum class AppScreen(@StringRes val title: Int) {
 
 @Composable
 fun BookieBoardApp(
-    userViewModel: UserViewModel,
-    questionViewModel: QuestionViewModel,
     modifier: Modifier = Modifier,
+    questionViewModel: QuestionViewModel = hiltViewModel(),
+    userViewModel: UserViewModel = hiltViewModel(),
     navController: NavHostController = rememberNavController()
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
@@ -66,6 +67,7 @@ fun BookieBoardApp(
         ) {
             composable(route = AppScreen.Welcome.name) {
                 WelcomeScreen(
+                    userViewModel = userViewModel,
                     onContinueClicked = { navController.navigate(AppScreen.Home.name) },
                     onSignUpClicked = { navController.navigate(AppScreen.SignUp.name) },
                     modifier = modifier.fillMaxSize()
@@ -73,26 +75,22 @@ fun BookieBoardApp(
             }
             composable(route = AppScreen.Home.name) {
                 HomeScreen(
-                    onPlayClicked = {
-                        navController.navigate(AppScreen.Question.name)
-                    })
+                    userViewModel = userViewModel,
+                    questionViewModel = questionViewModel,
+                    onPlayClicked = { navController.navigate(AppScreen.Question.name) })
             }
             composable(route = AppScreen.Question.name) {
                 QuestionScreen(
-                    onSubmitClicked = {
-                        val currentPlayScore = questionViewModel.getCurrentPlayScore()
-                        userViewModel.updateBookieBoardScore(currentPlayScore)
-                        questionViewModel.resetCurrentQuestionIndex()
-                        navController.navigate(AppScreen.BookieBoard.name)
-                    },
-                    onNextClicked = {
-                        questionViewModel.updateCurrentQuestion()
-                    },
-                    questionViewModel = questionViewModel
+                    userViewModel = userViewModel,
+                    questionViewModel = questionViewModel,
+                    onSubmitClicked = { navController.navigate(AppScreen.BookieBoard.name) },
+                    onNextClicked = { questionViewModel.updateCurrentQuestion() },
                 )
             }
             composable(route = AppScreen.BookieBoard.name) {
                 BookieBoardScreen(
+                    userViewModel = userViewModel,
+                    questionViewModel = questionViewModel,
                     onViewBookieBoardClicked = { },
                     onHomeClicked =  {
                         questionViewModel.resetCurrentPlayScore()
@@ -102,6 +100,7 @@ fun BookieBoardApp(
             }
             composable(route = AppScreen.SignUp.name) {
                 SignUpScreen(
+                    userViewModel = userViewModel,
                     onSignInClicked = { navController.navigate(AppScreen.Welcome.name) }
                 )
             }

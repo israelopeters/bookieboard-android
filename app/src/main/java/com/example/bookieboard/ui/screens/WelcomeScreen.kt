@@ -49,7 +49,7 @@ fun WelcomeScreen(
     onContinueClicked: () -> Unit,
     onSignUpClicked: () -> Unit,
     modifier: Modifier = Modifier,
-    userViewModel: UserViewModel = hiltViewModel()
+    userViewModel: UserViewModel
 ) {
     when (userViewModel.currentUser.authMode) {
 
@@ -245,6 +245,7 @@ fun SignInSuccess(
 fun WelcomeScreenPreview() {
     BookieboardTheme {
         WelcomeScreen(
+            userViewModel = hiltViewModel(),
             onContinueClicked = { },
             onSignUpClicked = { }
         )

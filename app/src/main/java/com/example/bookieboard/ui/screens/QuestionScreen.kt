@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.bookieboard.R
 import com.example.bookieboard.service.QuestionViewModel
+import com.example.bookieboard.service.UserViewModel
 import com.example.bookieboard.ui.theme.BookieboardTheme
 
 @Composable
@@ -38,7 +39,8 @@ fun QuestionScreen(
     onNextClicked: () -> Unit,
     onSubmitClicked: () -> Unit,
     modifier: Modifier = Modifier,
-    questionViewModel: QuestionViewModel = hiltViewModel()
+    userViewModel: UserViewModel,
+    questionViewModel: QuestionViewModel
 ) {
     Column(
         verticalArrangement = Arrangement.Center,
@@ -55,7 +57,12 @@ fun QuestionScreen(
 
         QuestionSelection(
             onNextClicked,
-            onSubmitClicked,
+            onSubmitClicked = {
+                val currentPlayScore = questionViewModel.getCurrentPlayScore()
+                userViewModel.updateBookieBoardScore(currentPlayScore)
+                questionViewModel.resetCurrentQuestionIndex()
+                onSubmitClicked()
+            },
             questionViewModel
         )
     }
@@ -181,6 +188,8 @@ fun QuestionSelection(
 fun QuestionScreenPreview() {
     BookieboardTheme {
         QuestionScreen(
+            userViewModel = hiltViewModel(),
+            questionViewModel = hiltViewModel(),
             onNextClicked = { },
             onSubmitClicked = { }
         )
