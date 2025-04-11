@@ -162,12 +162,17 @@ fun AppSignIn(
         )
         Button(
             onClick = onSignInClicked,
+            enabled = isFormValid(userViewModel.userEmail, userViewModel.userPassword),
             modifier = Modifier
                 .padding(8.dp)
         ) {
             Text(stringResource(R.string.sign_in))
         }
     }
+}
+
+fun isFormValid(email: String?, password: String?): Boolean {
+    return email?.isNotEmpty() == true && password?.isNotEmpty() == true
 }
 
 @Composable
