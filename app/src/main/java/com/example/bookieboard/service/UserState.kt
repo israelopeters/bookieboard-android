@@ -22,7 +22,7 @@ data class UserCreationState(
 
 enum class AuthMode{
     SIGNED_IN,
-    SIGNING_IN,
+    BUSY,
     SIGNED_OUT
 }
 

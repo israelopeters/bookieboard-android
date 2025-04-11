@@ -53,7 +53,7 @@ fun WelcomeScreen(
 ) {
     when (userViewModel.currentUser.authMode) {
 
-        AuthMode.SIGNING_IN -> IndeterminateCircularIndicator()
+        AuthMode.BUSY -> IndeterminateCircularIndicator()
 
         AuthMode.SIGNED_IN -> SignInSuccess(
             userState = userViewModel.currentUser,

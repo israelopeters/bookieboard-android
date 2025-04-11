@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -16,6 +17,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.bookieboard.service.QuestionViewModel
 import com.example.bookieboard.service.UserViewModel
 import com.example.bookieboard.ui.components.BookieBoardAppTopBar
+import com.example.bookieboard.ui.components.IndeterminateCircularIndicator
 import com.example.bookieboard.ui.screens.BookieBoardScreen
 import com.example.bookieboard.ui.screens.HomeScreen
 import com.example.bookieboard.ui.screens.QuestionScreen
@@ -53,8 +55,11 @@ fun BookieBoardApp(
                 BookieBoardAppTopBar(
                     currentScreen = currentScreen,
                     canNavigate = navController.previousBackStackEntry != null,
-                    navigateUp = { },
-                    onSignOutClicked = { }
+                    navigateUp = {  },
+                    onSignOutClicked = {
+                        userViewModel.signOut()
+                        navController.navigate(AppScreen.Welcome.name)
+                    }
                 )
             }
         },
@@ -102,7 +107,10 @@ fun BookieBoardApp(
             composable(route = AppScreen.SignUp.name) {
                 SignUpScreen(
                     userViewModel = userViewModel,
-                    onSignInClicked = { navController.navigate(AppScreen.Welcome.name) }
+                    onSignInClicked = {
+                        userViewModel.clearAddedUser()
+                        navController.navigate(AppScreen.Welcome.name)
+                    }
                 )
             }
         }

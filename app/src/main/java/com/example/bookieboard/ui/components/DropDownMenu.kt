@@ -4,10 +4,8 @@ import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ExitToApp
-import androidx.compose.material.icons.automirrored.outlined.Send
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Person
@@ -25,10 +23,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import com.example.bookieboard.R
 import com.example.bookieboard.ui.theme.BookieboardTheme
 
 // Code copied from official Android documentation and modified
@@ -38,9 +33,7 @@ fun DropdownMenuWithDetails(onSignOutClicked: () -> Unit) {
     var expanded by remember { mutableStateOf(false) }
 
     Box(
-        modifier = Modifier
-            .padding(16.dp)
-            .background(MaterialTheme.colorScheme.background)
+        modifier = Modifier.background(MaterialTheme.colorScheme.background)
     ) {
         IconButton(onClick = { expanded = !expanded }) {
             Icon(

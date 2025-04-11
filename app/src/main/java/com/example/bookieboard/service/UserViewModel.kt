@@ -1,8 +1,6 @@
 package com.example.bookieboard.service
 
 import android.util.Log
-import androidx.compose.foundation.layout.Box
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -39,7 +37,7 @@ class UserViewModel @Inject constructor(private val apiRepository: ApiRepository
 
     fun getUser() {
         viewModelScope.launch(Dispatchers.IO) {
-            currentUser = currentUser.copy(authMode = AuthMode.SIGNING_IN)
+            currentUser = currentUser.copy(authMode = AuthMode.BUSY)
             try {
                 safelyCall {
                     currentUser = apiRepository.getUser(
@@ -77,6 +75,13 @@ class UserViewModel @Inject constructor(private val apiRepository: ApiRepository
             }
         }
         return addedUser
+    }
+
+    fun signOut() {
+        viewModelScope.launch {
+            currentUser = currentUser.copy(authMode = AuthMode.BUSY)
+            currentUser = UserUiState()
+        }
     }
 
     fun clearAddedUser() {
