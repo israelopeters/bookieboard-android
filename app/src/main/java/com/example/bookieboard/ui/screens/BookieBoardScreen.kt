@@ -101,28 +101,28 @@ fun ScoreStatus(
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Normal,
                 color = MaterialTheme.colorScheme.onBackground,
-                modifier = Modifier.padding(8.dp)
+                modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)
             )
             Text(
                 text = "Current score: ${questionViewModel.getCurrentPlayScore()}",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Normal,
                 color = MaterialTheme.colorScheme.onBackground,
-                modifier = Modifier.padding(8.dp)
+                modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)
             )
             Text(
                 text = "All-time score: ${currentUser.bookieScore}",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Normal,
                 color = MaterialTheme.colorScheme.onBackground,
-                modifier = Modifier.padding(8.dp)
+                modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)
             )
             Text(
                 text = "Rank: ${currentUser.bookieRank}",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Normal,
                 color = MaterialTheme.colorScheme.onBackground,
-                modifier = Modifier.padding(8.dp)
+                modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)
             )
         }
     }
