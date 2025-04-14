@@ -55,6 +55,8 @@ class QuestionViewModel @Inject constructor(private val apiRepository: ApiReposi
         _selectedDifficultyLevel = difficultyLevel
     }
 
+    fun getSelectedDifficultyLevel() = _selectedDifficultyLevel
+
     fun updateCurrentPlayScore() {
         _currentPlayScore++
     }

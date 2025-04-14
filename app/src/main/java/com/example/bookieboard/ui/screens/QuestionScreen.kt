@@ -30,6 +30,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.bookieboard.R
+import com.example.bookieboard.model.DifficultyLevel
 import com.example.bookieboard.service.QuestionViewModel
 import com.example.bookieboard.service.UserViewModel
 import com.example.bookieboard.ui.theme.BookieboardTheme
@@ -79,7 +80,13 @@ fun StatusSection(
         modifier = modifier
     ){
         Text(
-            text = stringResource(R.string.taking_it_easy),
+            text = when (
+                questionViewModel.getSelectedDifficultyLevel()
+            ) {
+                DifficultyLevel.EASY -> "Taking It Easy"
+                DifficultyLevel.MEDIUM -> "Bringing It On"
+                DifficultyLevel.HARD -> "Book Lording It"
+            },
             style = MaterialTheme.typography.headlineLarge,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onBackground,
@@ -121,7 +128,9 @@ fun QuestionSelection(
         val (selectedOption, onOptionSelected) = remember { mutableStateOf(radioOptions[0]) }
         // Note that Modifier.selectableGroup() is essential to ensure correct accessibility behavior
         Column(
-            modifier.selectableGroup().padding(horizontal = 16.dp)
+            modifier
+                .selectableGroup()
+                .padding(horizontal = 16.dp)
         ) {
             radioOptions.forEach { text ->
                 Row(
