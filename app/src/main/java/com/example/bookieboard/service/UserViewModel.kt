@@ -70,6 +70,9 @@ class UserViewModel @Inject constructor(private val apiRepository: ApiRepository
                 safelyCall {
                     addedUser = apiRepository.addNewUser(newUser)
                 }
+                if (addedUser.email != null) {
+                    addedUser = addedUser.copy(signUpMode = SignUpMode.ACTIVE)
+                }
             } catch (e: Exception) {
                 addedUser = addedUser.copy(error = e.message)
             }
