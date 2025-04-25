@@ -1,4 +1,4 @@
-# Bookieboard API
+# Bookieboard App
 Bookieboard is a simple quiz app to help you test your bibliophilic depths relative to other bibliophiles. Just for fun!
 
 ## MVP Features
